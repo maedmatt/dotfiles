@@ -23,3 +23,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Flutter
 export PATH="$HOME/flutter/bin:$PATH"
+
+# ASCII ART of pfetch
+export PF_ASCII="openbsd"
