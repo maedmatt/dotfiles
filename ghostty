@@ -9,3 +9,4 @@ macos-non-native-fullscreen = true
 cursor-style = block
 
 theme = "oxocarbon"
+keybind = shift+enter=text:\x1b\r
