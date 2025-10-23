@@ -87,15 +87,17 @@ lspconfig.clangd.setup({
     cmd = { "/opt/homebrew/opt/llvm/bin/clangd" },
 })
 
--- Python LSP
+-- Python LSP - Pyright for type checking
 lspconfig.pyright.setup({})
--- Python formatting
+-- Python LSP - Ruff for linting and formatting
+lspconfig.ruff.setup({})
+-- Python formatting with Ruff (overrides the general <leader>lf for Python files)
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "python",
     callback = function()
         vim.keymap.set("n", "<leader>lf", function()
-            vim.cmd("%!black -q -")
-        end, { buffer = true, desc = "Format with Black" })
+            vim.lsp.buf.format({ async = false })
+        end, { buffer = true, desc = "Format with Ruff" })
     end,
 })
 
