@@ -2,8 +2,8 @@
 
 set -e
 
-sudo apt update
-sudo apt install neovim tmux -y
+apt update
+apt install neovim tmux -y
 cp .bashrc ~/
 cp .tmux.conf ~/
 mkdir -p ~/.config/nvim
