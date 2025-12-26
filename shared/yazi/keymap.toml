@@ -1,0 +1,6 @@
+[[mgr.prepend_keymap]]
+on = ["o"]
+run = '''
+  shell 'tmux new-window "nvim \"$0\""' --confirm
+'''
+desc = "Open file in nvim (new tmux window)"

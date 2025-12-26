@@ -26,3 +26,6 @@ export PATH="$HOME/flutter/bin:$PATH"
 
 # ASCII ART of pfetch
 export PF_ASCII="openbsd"
+
+# Alias for simple uv folder creation
+alias uvinit='copier copy gh:maedmatt/simple-modern-uv'
