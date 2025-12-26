@@ -9,7 +9,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     SHELL_TARGET="$HOME/.zshrc"
 else
     PLATFORM="linux"
-    SHELL_RC=".bashrc"
+    SHELL_RC="bashrc"
     SHELL_TARGET="$HOME/.bashrc"
 fi
 
