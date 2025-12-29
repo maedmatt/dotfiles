@@ -30,6 +30,9 @@ export PF_ASCII="openbsd"
 # Alias for simple uv folder creation
 alias uvinit='copier copy gh:maedmatt/simple-modern-uv'
 
+# fzf
+source <(fzf --zsh)
+
 # Yazi wrapper - cd to last directory on exit
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
