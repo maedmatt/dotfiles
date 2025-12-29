@@ -50,7 +50,7 @@ install_apps() {
         brew install neovim uv yazi tmux lazygit btop fzf
     else
         sudo apt update
-        sudo apt install -y tmux btop
+        sudo apt install -y tmux btop unzip
 
         if ! command -v nvim &> /dev/null; then
             curl -sL https://github.com/MordechaiHadad/bob/releases/latest/download/bob-linux-x86_64.zip -o /tmp/bob.zip
