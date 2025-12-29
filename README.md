@@ -1,7 +1,7 @@
 # dotfiles
 
 ```bash
-git clone https://github.com/maedmatt/dotfiles ~/dotfiles
+git clone https://github.com/maedmatt/dotfiles && cd ~/dotfiles
 cd ~/dotfiles
 
 ./install.sh           # symlink dotfiles
