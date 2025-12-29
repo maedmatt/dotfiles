@@ -45,6 +45,7 @@ if [ -f /usr/share/bash-completion/bash_completion ]; then
 fi
 
 # fzf
+export PATH="$HOME/.fzf/bin:$PATH"
 eval "$(fzf --bash)"
 
 # Yazi wrapper - cd to last directory on exit

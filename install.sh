@@ -36,7 +36,7 @@ link() {
         echo "Backed up $2"
     fi
     mkdir -p "$(dirname "$2")"
-    ln -sf "$1" "$2"
+    ln -sfn "$1" "$2"
     echo "$2 → $1"
 }
 

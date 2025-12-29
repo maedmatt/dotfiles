@@ -1,0 +1,12 @@
+# ~/.config/ghostty/config
+
+title = " "
+cursor-style-blink = false
+shell-integration-features = no-cursor
+window-decoration = true
+cursor-style = block
+theme = Oxocarbon
+keybind = shift+enter=text:\x1b\r
+#keybind = shift+enter=text:\x1b[13;2u
+keybind = ctrl+enter=text:\x1b[13;5u
+
