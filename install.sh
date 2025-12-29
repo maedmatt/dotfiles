@@ -47,7 +47,7 @@ install_apps() {
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop
+        brew install neovim uv yazi tmux lazygit btop fzf
     else
         sudo apt update
         sudo apt install -y tmux btop
@@ -74,6 +74,11 @@ install_apps() {
         if ! command -v lazygit &> /dev/null; then
             LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
             curl -sL "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | sudo tar -xz -C /usr/local/bin lazygit
+        fi
+
+        if ! command -v fzf &> /dev/null; then
+            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+            ~/.fzf/install --key-bindings --completion --no-update-rc
         fi
     fi
 }

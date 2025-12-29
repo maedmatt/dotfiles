@@ -44,6 +44,9 @@ if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
 fi
 
+# fzf
+eval "$(fzf --bash)"
+
 # Yazi wrapper - cd to last directory on exit
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
