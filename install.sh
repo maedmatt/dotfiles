@@ -42,43 +42,88 @@ link() {
 
 install_apps() {
     echo "Installing apps..."
-
     if [[ "$PLATFORM" == "macos" ]]; then
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop fzf
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli
     else
+        # Detect architecture
+        ARCH=$(uname -m)  # x86_64 or aarch64
+        
+        # Helper to get latest GitHub release tag
+        gh_latest() {
+            curl -sfL "https://api.github.com/repos/$1/releases/latest" | grep -Po '"tag_name": "\K[^"]*'
+        }
+        
+        # Remove conflicting packages
+        sudo apt remove -y fd-find libnode-dev libnode72 2>/dev/null || true
+        sudo apt autoremove -y
+        
         sudo apt update
-        sudo apt install -y tmux btop unzip
-
-        if ! command -v nvim &> /dev/null; then
-            curl -sL https://github.com/MordechaiHadad/bob/releases/latest/download/bob-linux-x86_64.zip -o /tmp/bob.zip
-            unzip -o /tmp/bob.zip -d /tmp
-            mv /tmp/bob-linux-x86_64/bob ~/.local/bin/
-            bob install stable && bob use stable
+        sudo apt install -y tmux btop unzip ripgrep imagemagick ghostscript
+        
+        # Node.js LTS
+        if ! node --version 2>/dev/null | grep -qE "^v(1[8-9]|[2-9][0-9])"; then
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
         fi
-
+        
+        # fd
+        if ! fd --version 2>/dev/null | grep -qE "fd (9|10)\."; then
+            V=$(gh_latest sharkdp/fd)
+            DEB_ARCH=$([ "$ARCH" = "x86_64" ] && echo "amd64" || echo "arm64")
+            wget -qO /tmp/fd.deb "https://github.com/sharkdp/fd/releases/download/${V}/fd-musl_${V#v}_${DEB_ARCH}.deb"
+            sudo dpkg -i /tmp/fd.deb
+            rm /tmp/fd.deb
+        fi
+        
+        # bob
+        if ! command -v bob &> /dev/null; then
+            V=$(gh_latest MordechaiHadad/bob)
+            wget -qO /tmp/bob.zip "https://github.com/MordechaiHadad/bob/releases/download/${V}/bob-linux-${ARCH}.zip"
+            unzip -o /tmp/bob.zip -d /tmp/bob-temp
+            mkdir -p ~/.local/bin
+            mv /tmp/bob-temp/bob-linux-${ARCH}/bob ~/.local/bin/
+            rm -rf /tmp/bob.zip /tmp/bob-temp
+        fi
+        
+        # neovim via bob
+        if ! command -v nvim &> /dev/null; then
+            ~/.local/bin/bob install stable && ~/.local/bin/bob use stable
+        fi
+        
+        # uv
         if ! command -v uv &> /dev/null; then
             curl -LsSf https://astral.sh/uv/install.sh | sh
         fi
-
+        
+        # yazi
         if ! command -v yazi &> /dev/null; then
-            wget -qO /tmp/yazi.zip https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-musl.zip
+            V=$(gh_latest sxyazi/yazi)
+            wget -qO /tmp/yazi.zip "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${ARCH}-unknown-linux-musl.zip"
             unzip -q /tmp/yazi.zip -d /tmp/yazi-temp
             sudo mv /tmp/yazi-temp/*/yazi /usr/local/bin/
             sudo mv /tmp/yazi-temp/*/ya /usr/local/bin/
             rm -rf /tmp/yazi.zip /tmp/yazi-temp
         fi
-
+        
+        # lazygit
         if ! command -v lazygit &> /dev/null; then
-            LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-            curl -sL "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | sudo tar -xz -C /usr/local/bin lazygit
+            V=$(gh_latest jesseduffield/lazygit)
+            LG_ARCH=$([ "$ARCH" = "x86_64" ] && echo "x86_64" || echo "arm64")
+            curl -sL "https://github.com/jesseduffield/lazygit/releases/download/${V}/lazygit_${V#v}_Linux_${LG_ARCH}.tar.gz" | sudo tar -xz -C /usr/local/bin lazygit
         fi
-
+        
+        # fzf
         if ! command -v fzf &> /dev/null; then
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-            ~/.fzf/install --key-bindings --completion --no-update-rc
+            ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+        fi
+        
+        # mermaid-cli
+        if command -v npm &> /dev/null && ! command -v mmdc &> /dev/null; then
+            sudo npm install -g @mermaid-js/mermaid-cli
         fi
     fi
 }
@@ -92,25 +137,17 @@ install_claude() {
 
 install_dotfiles() {
     echo "Installing dotfiles..."
-
     # Shared
     link "$DOTFILES/shared/tmux.conf" "$HOME/.tmux.conf"
     link "$DOTFILES/shared/nvim" "$HOME/.config/nvim"
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
-
     # Platform-specific
     link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"
-
-    # TPM
-    if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-        echo "Installed TPM — run 'Ctrl+b I' in tmux to install plugins"
-    fi
 }
 
-$DO_APPS && install_apps
-$DO_CLAUDE && install_claude
-$DO_DOTFILES && install_dotfiles
+if $DO_APPS; then install_apps; fi
+if $DO_CLAUDE; then install_claude; fi
+if $DO_DOTFILES; then install_dotfiles; fi
 
 echo "Done!"
