@@ -3,10 +3,16 @@
 title = " "
 cursor-style-blink = false
 shell-integration-features = no-cursor
+font-family = SFMono Nerd Font
+font-size = 16
 window-decoration = true
 cursor-style = block
-theme = Oxocarbon
-keybind = shift+enter=text:\x1b\r
-#keybind = shift+enter=text:\x1b[13;2u
-keybind = ctrl+enter=text:\x1b[13;5u
+theme = Gruvbox Dark Hard
+adjust-cell-height = 35%
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+window-padding-balance = true
+window-save-state = always
 
+keybind = shift+enter=text:\x1b\r
+keybind = ctrl+enter=text:\x1b[13;5u

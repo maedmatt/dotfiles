@@ -1,7 +1,9 @@
-[plugin]
-deps = []
+[[plugin.deps]]
+use = "yazi-rs/flavors:gruvbox-dark"
+rev = "9276ffa"
+hash = "99aa06d3014798d86001c324468d497f"
 
 [[flavor.deps]]
-use = "BennyOe/tokyo-night"
-rev = "5f56364"
-hash = "c0bf69ad2c44005892d586e9693993c6"
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "9276ffa"
+hash = "b951d27afe197d154f6da9683b46c5f8"
