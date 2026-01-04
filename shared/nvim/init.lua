@@ -100,6 +100,9 @@ local plugins = {
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
           map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
           map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+          map("n", "<leader>lf", function()
+            vim.lsp.buf.format({ async = true })
+          end, "Format")
         end,
       })
 
@@ -112,6 +115,28 @@ local plugins = {
         handlers = {
           function(server_name)
             lspconfig[server_name].setup({})
+          end,
+          ["basedpyright"] = function()
+            lspconfig.basedpyright.setup({
+              settings = {
+                basedpyright = {
+                  typeCheckingMode = "standard",
+                },
+              },
+            })
+          end,
+          ["ruff"] = function()
+            lspconfig.ruff.setup({
+              init_options = {
+                settings = {
+                  lineLength = 88,
+                  lint = {
+                    select = { "E", "F", "W", "I", "UP", "B" },
+                    ignore = { "E501" },
+                  },
+                },
+              },
+            })
           end,
         },
       })
@@ -137,7 +162,7 @@ local plugins = {
     lazy = false,
     config = function()
       require("mason-tool-installer").setup({
-        ensure_installed = { "pyright", "ruff" },
+        ensure_installed = { "basedpyright", "ruff" },
       })
     end,
   },
