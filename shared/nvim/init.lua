@@ -340,3 +340,12 @@ api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
   end,
 })
+
+-- Auto-close terminal on successful exit
+api.nvim_create_autocmd("TermClose", {
+  callback = function()
+    if vim.v.event.status == 0 then
+      vim.cmd("bdelete!")
+    end
+  end,
+})
