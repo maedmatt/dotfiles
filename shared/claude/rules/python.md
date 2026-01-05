@@ -237,7 +237,7 @@ Always use full type annotations, generics, and other modern practices.
 
 - Use `backticks` around variable names and inline code excerpts.
 
-- Use plain fences (```) around code blocks inside of pydocs.
+- Use plain fences (triple backticks) around code blocks inside of pydocs.
 
 - For classes with many methods, use a concise docstring on the class that explains all
   the common information, and avoid repeating the same information on every method.
