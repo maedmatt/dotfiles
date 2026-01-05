@@ -61,7 +61,7 @@ install_apps() {
         sudo apt autoremove -y
         
         sudo apt update
-        sudo apt install -y tmux btop unzip ripgrep imagemagick ghostscript
+        sudo apt install -y tmux btop unzip ripgrep imagemagick ghostscript python3-venv
         
         # Node.js LTS
         if ! node --version 2>/dev/null | grep -qE "^v(1[8-9]|[2-9][0-9])"; then

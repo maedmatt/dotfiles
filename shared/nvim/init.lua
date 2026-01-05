@@ -78,11 +78,46 @@ local plugins = {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason-org/mason-lspconfig.nvim" },
+    dependencies = {
+      { "mason-org/mason.nvim", config = true },
+      {
+        "mason-org/mason-lspconfig.nvim",
+        config = function()
+          local lspconfig = require("lspconfig")
+          require("mason-lspconfig").setup({
+            ensure_installed = { "basedpyright", "ruff" },
+            handlers = {
+              function(server_name)
+                lspconfig[server_name].setup({})
+              end,
+              ["basedpyright"] = function()
+                lspconfig.basedpyright.setup({
+                  settings = {
+                    basedpyright = {
+                      typeCheckingMode = "standard",
+                    },
+                  },
+                })
+              end,
+              ["ruff"] = function()
+                lspconfig.ruff.setup({
+                  init_options = {
+                    settings = {
+                      lineLength = 88,
+                      lint = {
+                        select = { "E", "F", "W", "I", "UP", "B" },
+                        ignore = { "E501" },
+                      },
+                    },
+                  },
+                })
+              end,
+            },
+          })
+        end,
+      },
+    },
     config = function()
-      local lspconfig = require("lspconfig")
-      local mason_lspconfig = require("mason-lspconfig")
-
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
         callback = function(args)
@@ -109,60 +144,6 @@ local plugins = {
       vim.diagnostic.config({
         virtual_text = true,
         underline = true,
-      })
-
-      mason_lspconfig.setup({
-        handlers = {
-          function(server_name)
-            lspconfig[server_name].setup({})
-          end,
-          ["basedpyright"] = function()
-            lspconfig.basedpyright.setup({
-              settings = {
-                basedpyright = {
-                  typeCheckingMode = "standard",
-                },
-              },
-            })
-          end,
-          ["ruff"] = function()
-            lspconfig.ruff.setup({
-              init_options = {
-                settings = {
-                  lineLength = 88,
-                  lint = {
-                    select = { "E", "F", "W", "I", "UP", "B" },
-                    ignore = { "E501" },
-                  },
-                },
-              },
-            })
-          end,
-        },
-      })
-    end,
-  },
-
-  {
-    "mason-org/mason.nvim",
-    lazy = false,
-    config = function()
-      require("mason").setup()
-    end,
-  },
-
-  {
-    "mason-org/mason-lspconfig.nvim",
-    lazy = false,
-    dependencies = { "neovim/nvim-lspconfig" },
-  },
-
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    lazy = false,
-    config = function()
-      require("mason-tool-installer").setup({
-        ensure_installed = { "basedpyright", "ruff" },
       })
     end,
   },
@@ -246,7 +227,20 @@ local plugins = {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require("gitsigns").setup()
+      require("gitsigns").setup({
+        on_attach = function(bufnr)
+          local gs = require("gitsigns")
+          local function map(mode, l, r, desc)
+            vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
+          end
+          map("n", "]c", gs.next_hunk, "Next hunk")
+          map("n", "[c", gs.prev_hunk, "Prev hunk")
+          map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+          map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
+          map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
+          map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
+        end,
+      })
     end,
   },
 

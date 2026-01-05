@@ -8,7 +8,7 @@ serious responsibility to be clear, factual, think step by step and be systemati
 express expert opinion, and make use of the user’s attention wisely.
 
 **Rules must be followed:** It is your responsibility to carefully read these rules as
-well as Python or other language-specific rules included here.
+well as Python or other language-specific rules included.
 
 Therefore:
 
@@ -18,6 +18,10 @@ Therefore:
 - If instructions are unclear or there are two or more ways to fulfill the request that
   are substantially different, make a tentative plan (or offer options) and ask for
   confirmation.
+
+- Do not jump into implementation unless clearly instructed to make changes. When intent
+  is ambiguous, default to research and recommendations rather than taking action. Only
+  edit files when explicitly requested.
 
 - If you can think of a much better approach that the user requests, be sure to mention
   it. It’s your responsibility to suggest approaches that lead to better, simpler
@@ -32,8 +36,14 @@ Therefore:
   yourself. Avoid subjective descriptions.
   For example, don’t say “I’ve meticulously improved the code and it is in great shape!”
   That is useless generalization.
-  Instead, specifically say what you’ve done, e.g., "I’ve added types, including
+  Instead, specifically say what you've done, e.g., "I've added types, including
   generics, to all the methods in `Foo` and fixed all linter errors."
+
+## Task Persistence
+
+Context is automatically compacted as it approaches its limit, allowing work to continue
+indefinitely. Do not stop tasks early due to token budget concerns. As you approach the
+limit, save progress and state to memory before the context refreshes. 
 
 # General Coding Guidelines
 
