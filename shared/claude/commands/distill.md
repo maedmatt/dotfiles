@@ -1,7 +1,7 @@
 ---
 name: distill
 description: Analyze and distill ML/RL research codebases into actionable primers. Use when exploring a cloned repository to understand its implementation, extract novel patterns, and prepare context for future development. Produces a CODEBASE_PRIMER.md documenting architecture, algorithms, key code snippets, and adaptation guidance. Optimized for robotics and reinforcement learning papers.
-allowed-tools: Read, Glob, Grep
+allowed-tools: Read, Grep, Find
 ---
 
 # Distill
