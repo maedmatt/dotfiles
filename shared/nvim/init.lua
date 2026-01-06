@@ -173,10 +173,18 @@ local plugins = {
       require("nvim-treesitter").setup({
         ensure_installed = {
           "bash", "c", "html", "javascript", "json", "lua",
-          "markdown", "python", "typescript", "vim", "yaml",
+          "markdown", "markdown_inline", "python", "typescript", "vim", "yaml",
         },
       })
     end,
+  },
+
+  -- Markdown rendering
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {},
   },
 
   -- Mini.nvim
@@ -293,6 +301,9 @@ map("n", "<S-Tab>", ":bprev<CR>", { silent = true })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
+
+-- UI toggles
+map("n", "<leader>uw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle wrap" })
 
 -- Edit
 map("v", "J", ":m '>+1<CR>gv=gv")
