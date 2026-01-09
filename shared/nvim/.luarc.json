@@ -1,3 +1,13 @@
 {
-  "format.enable": false
+  "format.enable": false,
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "diagnostics": {
+    "globals": ["vim"]
+  },
+  "workspace": {
+    "library": ["$VIMRUNTIME/lua"],
+    "checkThirdParty": false
+  }
 }
