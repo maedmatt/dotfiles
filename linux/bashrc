@@ -20,6 +20,9 @@ else
     PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
 fi
 
+# Notify terminal of working directory (for tmux pane_current_path)
+PROMPT_COMMAND='printf "\033]7;file://%s%s\033\\\\" "$HOSTNAME" "$PWD"'
+
 # Colors
 alias ls='ls --color=auto'
 alias la='ls -la'
