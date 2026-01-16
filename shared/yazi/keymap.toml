@@ -4,3 +4,10 @@ run = '''
   shell 'tmux new-window "nvim \"$0\""' --confirm
 '''
 desc = "Open file in nvim (new tmux window)"
+
+[[mgr.prepend_keymap]]
+on = ["O"]
+run = '''
+  shell '[ -d "$0" ] && tmux new-window -c "$0" || tmux new-window -c "$(dirname "$0")"' --confirm
+'''
+desc = "Open directory in new tmux window"
