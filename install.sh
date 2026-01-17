@@ -143,6 +143,7 @@ install_opencode() {
     mkdir -p "$HOME/.config/opencode"
     link "$DOTFILES/shared/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
     link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
+    link "$DOTFILES/shared/opencode/themes" "$HOME/.config/opencode/themes"
 }
 
 install_dotfiles() {
