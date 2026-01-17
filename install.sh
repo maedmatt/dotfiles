@@ -16,6 +16,7 @@ fi
 # Parse flags
 DO_APPS=false
 DO_CLAUDE=false
+DO_OPENCODE=false
 DO_DOTFILES=false
 
 if [[ $# -eq 0 ]]; then
@@ -24,9 +25,10 @@ fi
 
 for arg in "$@"; do
     case $arg in
-        --apps)    DO_APPS=true ;;
-        --claude)  DO_CLAUDE=true ;;
-        --all)     DO_APPS=true; DO_CLAUDE=true; DO_DOTFILES=true ;;
+        --apps)     DO_APPS=true ;;
+        --claude)   DO_CLAUDE=true ;;
+        --opencode) DO_OPENCODE=true ;;
+        --all)      DO_APPS=true; DO_CLAUDE=true; DO_OPENCODE=true; DO_DOTFILES=true ;;
     esac
 done
 
@@ -136,6 +138,13 @@ install_claude() {
     link "$DOTFILES/shared/claude/scripts/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 }
 
+install_opencode() {
+    echo "Installing OpenCode config..."
+    mkdir -p "$HOME/.config/opencode"
+    link "$DOTFILES/shared/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+    link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
+}
+
 install_dotfiles() {
     echo "Installing dotfiles..."
     # Shared
@@ -149,6 +158,7 @@ install_dotfiles() {
 
 if $DO_APPS; then install_apps; fi
 if $DO_CLAUDE; then install_claude; fi
+if $DO_OPENCODE; then install_opencode; fi
 if $DO_DOTFILES; then install_dotfiles; fi
 
 echo "Done!"

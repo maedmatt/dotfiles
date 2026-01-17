@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "~/dotfiles/shared/claude/rules/general.md",
+    "~/dotfiles/shared/claude/rules/commits.md",
+    "~/dotfiles/shared/claude/rules/python.md"
+  ],
+  "permission": {
+    "edit": {
+      "*": "ask",
+      "*.md": "allow"
+    }
+  }
+}
