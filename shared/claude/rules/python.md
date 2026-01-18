@@ -86,9 +86,6 @@ Always use full type annotations, generics, and other modern practices.
 - Use pathlib `Path` instead of strings.
   Use `Path(filename).read_text()` instead of two-line `with open(...)` blocks.
 
-- Use strif’s `atomic_output_file` context manager when writing files to ensure output
-  files are written atomically.
-
 ## Use Modern Python Practices
 
 - ALWAYS use `@override` decorators to override methods from base classes.
