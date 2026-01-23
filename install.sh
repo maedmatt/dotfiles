@@ -16,6 +16,7 @@ fi
 # Parse flags
 DO_APPS=false
 DO_CLAUDE=false
+DO_CODEX=false
 DO_OPENCODE=false
 DO_DOTFILES=false
 
@@ -27,8 +28,9 @@ for arg in "$@"; do
     case $arg in
         --apps)     DO_APPS=true ;;
         --claude)   DO_CLAUDE=true ;;
+        --codex)    DO_CODEX=true ;;
         --opencode) DO_OPENCODE=true ;;
-        --all)      DO_APPS=true; DO_CLAUDE=true; DO_OPENCODE=true; DO_DOTFILES=true ;;
+        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_DOTFILES=true ;;
     esac
 done
 
@@ -136,6 +138,7 @@ install_claude() {
     link "$DOTFILES/shared/claude/rules" "$HOME/.claude/rules"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
     link "$DOTFILES/shared/claude/scripts/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
+    link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
 }
 
 install_opencode() {
@@ -144,6 +147,15 @@ install_opencode() {
     link "$DOTFILES/shared/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
     link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
     link "$DOTFILES/shared/opencode/themes" "$HOME/.config/opencode/themes"
+    link "$DOTFILES/shared/skills" "$HOME/.config/opencode/skills"
+}
+
+install_codex() {
+    echo "Installing Codex config..."
+    mkdir -p "$HOME/.codex"
+    link "$DOTFILES/shared/codex/AGENT.md" "$HOME/.codex/AGENT.md"
+    link "$DOTFILES/shared/codex/prompts" "$HOME/.codex/prompts"
+    link "$DOTFILES/shared/skills" "$HOME/.codex/skills"
 }
 
 install_dotfiles() {
@@ -159,6 +171,7 @@ install_dotfiles() {
 
 if $DO_APPS; then install_apps; fi
 if $DO_CLAUDE; then install_claude; fi
+if $DO_CODEX; then install_codex; fi
 if $DO_OPENCODE; then install_opencode; fi
 if $DO_DOTFILES; then install_dotfiles; fi
 
