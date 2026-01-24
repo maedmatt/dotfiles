@@ -1,5 +1,9 @@
 ---
-description: Analyze and distill ML/RL research codebases into actionable primers
+name: distill
+description: Analyze and distill ML/RL research codebases into actionable primers. Use when exploring a cloned repository to understand its implementation, extract novel patterns, and prepare context for future development. Produces a CODEBASE_PRIMER.md documenting architecture, algorithms, key code snippets, and adaptation guidance. Optimized for robotics and reinforcement learning papers.
+context: fork
+agent: Explore
+allowed-tools: Read, Grep, Glob
 ---
 
 # Distill
@@ -8,11 +12,10 @@ Analyze an ML/RL research codebase and produce a distilled primer for learning a
 
 ## Workflow
 
-1. User has already cloned the repo and is in its root directory
-2. Check for optional `PAPER_CONTEXT.md` (abstract, key contributions, relevant equations)
-3. Explore the codebase structure
-4. Extract and analyze relevant components
-5. Generate `CODEBASE_PRIMER.md` in the repo root
+1. Check for optional `PAPER_CONTEXT.md` (abstract, key contributions, relevant equations)
+2. Explore the codebase structure thoroughly
+3. Extract and analyze relevant components
+4. Generate `CODEBASE_PRIMER.md` in the repo root
 
 ## What to Extract
 
@@ -41,19 +44,19 @@ Note these exist only if needed to run the code.
 
 ## Distinguishing Novel vs Standard
 
-Explicitly identify what comes from external libraries versus what the paper contributes. Use this pattern:
+Explicitly identify what comes from external libraries versus what the paper contributes:
 
 ```
 They use SAC from stable-baselines3 but modify the critic network:
 [code snippet of modification]
 ```
 
-Common RL frameworks to recognize: stable-baselines3, CleanRL, rllab, Tianshou, RLlib, SKRL. Common simulators: MuJoCo, Isaac Gym, Isaac Lab, PyBullet, Gymnasium, robosuite, dm_control.
+Common RL frameworks to recognize: stable-baselines3, CleanRL, rllab, Tianshou, RLlib, SKRL.
+Common simulators: MuJoCo, Isaac Gym, Isaac Lab, PyBullet, Gymnasium, robosuite, dm_control.
 
 ## Code Snippet Format
 
 Include actual code for novel/interesting components. Annotate with location and explanation:
-
 
 ### [Component Name]
 
@@ -72,40 +75,7 @@ Keep snippets focused. Extract only the lines that matter, not entire classes.
 
 ## Output Structure
 
-Generate `CODEBASE_PRIMER.md` with this structure:
-
-```markdown
-# Codebase Primer: [repo-name]
-
-## Overview
-What this implements, the core approach, paper reference if known.
-
-## Environment & Task
-Simulator used, observation space, action space.
-What's standard vs custom environment code.
-Note portability: how coupled is the algo to this specific env?
-
-## Core Algorithm
-The main contribution with annotated code snippets.
-Clearly mark: "Novel to this paper" vs "Standard [library] usage"
-
-## Key Hyperparameters
-Only the ones that matter. Include:
-- Parameter name and value
-- Where it's set (file:line or config key)
-- Rationale if known from paper or comments
-
-## Adaptation Guide
-What's generalizable vs task-specific.
-Concrete guidance: "To use this with a different robot, you would need to..."
-Note difficulty: what's easy to swap out, what requires deeper changes.
-
-## File Map
-Quick reference to key files:
-- `path/to/model.py` - Network architectures
-- `path/to/train.py` - Training loop
-- etc.
-```
+Generate `CODEBASE_PRIMER.md` following the template in `references/primer-template.md`.
 
 ## Paper Context (Optional)
 
