@@ -196,7 +196,7 @@ local plugins = {
       require("mini.pairs").setup()
 
       local statusline = require("mini.statusline")
-      statusline.section_filename = function() return "%t" end
+      statusline.section_filename = function() return "%f" end
       statusline.setup({
         use_icons = true,
         set_vim_settings = false,
