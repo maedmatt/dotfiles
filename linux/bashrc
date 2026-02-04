@@ -33,14 +33,20 @@ alias ll='ls -lah'
 alias grep='grep --color=auto'
 
 # Editor
-alias vim="nvim"
-alias vi="nvim"
-export EDITOR="nvim"
+if command -v nvim &>/dev/null; then
+    alias vim="nvim"
+    alias vi="nvim"
+    export EDITOR="nvim"
+elif command -v vim &>/dev/null; then
+    export EDITOR="vim"
+else
+    export EDITOR="vi"
+fi
 
 # Path
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Terminal
 export TERM=xterm-256color
@@ -52,7 +58,7 @@ fi
 
 # fzf
 export PATH="$HOME/.fzf/bin:$PATH"
-eval "$(fzf --bash)"
+command -v fzf &>/dev/null && eval "$(fzf --bash)"
 
 # Yazi wrapper - cd to last directory on exit
 function y() {
