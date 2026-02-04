@@ -13,8 +13,11 @@ shopt -s histappend
 # Check window size after each command
 shopt -s checkwinsize
 
-# Prompt - yellow hostname when SSH'd
-if [ -n "$SSH_CONNECTION" ]; then
+# Prompt - cyan container ID when Docker, yellow hostname when SSH'd
+if [ -f /.dockerenv ]; then
+    _container_id=$(hostname)
+    PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[38;5;81m\]'"$_container_id"'\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+elif [ -n "$SSH_CONNECTION" ]; then
     PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[38;5;226m\]\h\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
 else
     PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
