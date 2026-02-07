@@ -6,11 +6,12 @@ alias ls='ls --color'
 alias la='ls -la'
 alias vim="nvim"
 alias vi="nvim"
+alias lg="lazygit"
 
 # the code are the 256 color codes
 # refrence here --> https://www.ditig.com/256-colors-cheat-sheet
-PROMPT='%F{167}ϟ%f %B%F{240}%2~ %f%b'
-# PROMPT='%F{167}∂%f %B%F{240}%1~ %f%b'
+# PROMPT='%F{167}ϟ%f %B%F{240}%2~ %f%b'
+PROMPT='%F{167}∂%f %B%F{240}%1~ %f%b'
 
 # Notify terminal of working directory (for tmux pane_current_path)
 precmd() { printf '\033]7;file://%s%s\033\\' "$HOST" "${PWD// /%20}" }
