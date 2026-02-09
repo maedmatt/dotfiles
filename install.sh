@@ -137,6 +137,7 @@ install_claude() {
     mkdir -p "$HOME/.claude"
     link "$DOTFILES/shared/claude/rules" "$HOME/.claude/rules"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
+    link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
     link "$DOTFILES/shared/claude/scripts/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
     link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
 }
