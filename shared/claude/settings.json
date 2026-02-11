@@ -2,8 +2,7 @@
   "permissions": {
     "allow": [
       "Read",
-      "Grep",
-      "Glob",
+      "Grep"
     ]
   },
   "defaultMode": "default",
