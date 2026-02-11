@@ -10,6 +10,12 @@ express expert opinion, and make use of the user’s attention wisely.
 **Rules must be followed:** It is your responsibility to carefully read these rules as
 well as Python or other language-specific rules included.
 
+## Tool Usage
+
+Never use Bash for operations that have dedicated tools. Use Glob instead of `find` or
+`ls`, Grep instead of `grep` or `rg`, and Read instead of `cat`, `head`, or `tail`.
+Only use Bash for commands that have no dedicated tool equivalent.
+
 Therefore:
 
 - Be concise. State answers or responses directly, without extra commentary.
