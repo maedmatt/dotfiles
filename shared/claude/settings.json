@@ -5,9 +5,12 @@
       "Grep"
     ]
   },
-  "defaultMode": "default",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
+  },
+  "defaultMode": "default",
+  "env": {
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-5-20250929[1m]"
   }
 }
