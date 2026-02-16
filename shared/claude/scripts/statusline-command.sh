@@ -34,12 +34,14 @@ else
   lines_removed=0
 fi
 
-# Context window calculation
+# Context window calculation (usable = 80% before auto-compact)
 usage=$(echo "$input" | jq '.context_window.current_usage')
 if [ "$usage" != "null" ]; then
   current=$(echo "$usage" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
   size=$(echo "$input" | jq '.context_window.context_window_size')
-  remaining=$((100 - (current * 100 / size)))
+  usable=$((size * 80 / 100))
+  remaining=$((100 - (current * 100 / usable)))
+  [ "$remaining" -lt 0 ] && remaining=0
 
   if [ "$remaining" -gt 50 ]; then
     ctx_color='\033[92m'  # Green
