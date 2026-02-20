@@ -39,6 +39,7 @@ usage=$(echo "$input" | jq '.context_window.current_usage')
 if [ "$usage" != "null" ]; then
   current=$(echo "$usage" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
   size=$(echo "$input" | jq '.context_window.context_window_size')
+  current=$((current * 104 / 100))
   usable=$((size * 80 / 100))
   remaining=$((100 - (current * 100 / usable)))
   [ "$remaining" -lt 0 ] && remaining=0
