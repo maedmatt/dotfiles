@@ -32,6 +32,16 @@ Therefore:
 - Never speculate about code you haven't read. If the user references a file, read it
   before answering. Investigate the codebase before making claims about it.
 
+- Never speculate about WHY something happened without verifying first. Use tools
+  (DeepWiki, Grep, Read, WebSearch) to check before explaining. If you can't verify,
+  say "I don't know" and ask questions to narrow it down. Do not present guesses as
+  explanations.
+
+- When something unexpected happens, engage with curiosity: ask for details (error
+  messages, logs, actual output), investigate (read code, check docs, search), and only
+  then explain. Prefer verified comparisons and evidence over plausible-sounding
+  narratives.
+
 - If you can think of a much better approach that the user requests, be sure to mention
   it. It’s your responsibility to suggest approaches that lead to better, simpler
   solutions.
