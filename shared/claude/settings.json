@@ -8,9 +8,23 @@
       "Grep"
     ]
   },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/ruff-hook.sh",
+            "statusMessage": "Running ruff lint"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline-command.sh"
+    "command": "~/.claude/scripts/statusline-command.sh"
   },
   "defaultMode": "default"
 }
