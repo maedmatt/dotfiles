@@ -1,4 +1,7 @@
-#!/usr/bin/env -S uv run --script
+#!/usr/bin/env -S uv run --no-project --script
+# /// script
+# requires-python = ">=3.11"
+# ///
 """Extract conversation text from a Claude Code session JSONL transcript.
 
 Strips images, tool results, progress messages, file snapshots, and
@@ -29,7 +32,8 @@ def find_session_jsonl(session_id: str | None = None) -> Path:
         raise SystemExit("error: not in a git repository")
 
     git_root = result.stdout.strip()
-    project_slug = git_root.replace("/", "-")
+    # Claude Code replaces both / and spaces with -
+    project_slug = git_root.replace("/", "-").replace(" ", "-")
     session_dir = project_dir / project_slug
 
     if not session_dir.is_dir():
