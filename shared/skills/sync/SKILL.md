@@ -8,6 +8,15 @@ allowed-tools: Bash(uv run *), Read, Glob, Grep
 
 Sync the current session's context to persistent files for cross-session continuity.
 
+## Tool rules
+
+**Never** use Bash when a dedicated tool exists. No exceptions:
+- `ls`, `find` → **Glob**
+- `grep`, `rg` → **Grep**
+- `cat`, `head`, `tail` → **Read**
+
+Bash is only for the extraction script (`uv run`).
+
 ## Step 1: Gather context
 
 Run the extraction script to get the full conversation transcript:
