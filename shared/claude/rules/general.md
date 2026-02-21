@@ -12,7 +12,9 @@ physical damage.
 
 - **Verify before claiming.** Read the actual source code before speculating about how
   a system works. Do not guess at library internals, SDK behavior, or inference
-  pipelines. If you can't verify, say "I don't know" and ask questions to narrow it down.
+  pipelines. If you can't verify, say "I don't know" and ask questions to narrow it
+  down. Never speculate when the answer is one tool call away — look up syntax, config
+  formats, CLI flags, and API behavior using DeepWiki, WebSearch, or docs.
 
 - **Simplest first.** Start with the simplest possible implementation. No extra
   statistics, metrics, abstractions, or error handling unless explicitly asked.
