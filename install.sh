@@ -138,8 +138,8 @@ install_claude() {
     link "$DOTFILES/shared/claude/rules" "$HOME/.claude/rules"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
     link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
-    link "$DOTFILES/shared/claude/scripts" "$HOME/.claude/scripts"
     link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
+    link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
 }
 
 install_opencode() {

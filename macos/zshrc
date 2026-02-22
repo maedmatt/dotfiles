@@ -21,6 +21,7 @@ export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
 # Set editor for VScode
 export EDITOR="nvim"
+bindkey -e  # zsh auto-enables vi mode when EDITOR contains "vi"
 
 # uv (Python package manager)
 export PATH="$HOME/.local/bin:$PATH"
@@ -45,3 +46,10 @@ function y() {
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+# bun completions
+[ -s "/Users/matteo/.bun/_bun" ] && source "/Users/matteo/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

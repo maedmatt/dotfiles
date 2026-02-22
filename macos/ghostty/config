@@ -19,6 +19,4 @@ clipboard-write = allow
 
 keybind = shift+enter=text:\x1b\r
 
-# Include vim keybindings
-config-file = vim.ghostty
 
