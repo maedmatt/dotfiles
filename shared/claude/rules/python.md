@@ -4,8 +4,9 @@ paths: "*.py,pyproject.toml"
 ---
 # Python Coding Guidelines
 
-Ruff handles linting and formatting via a PostToolUse hook. Do not worry about
-import ordering, unused imports, or style formatting — focus on correctness and design.
+After finishing all edits, run `make lint` to format, fix, and type-check.
+Do not worry about import ordering or style formatting during edits — focus on
+correctness and design.
 
 ## Language
 
