@@ -363,3 +363,15 @@ api.nvim_create_autocmd("TermClose", {
     end
   end,
 })
+
+-- Dim when tmux pane loses focus
+api.nvim_create_autocmd("FocusLost", {
+  callback = function()
+    vim.cmd("highlight Normal guibg=#242424")
+  end,
+})
+api.nvim_create_autocmd("FocusGained", {
+  callback = function()
+    vim.cmd("highlight Normal guibg=#1d2021")
+  end,
+})
