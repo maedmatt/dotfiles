@@ -28,6 +28,7 @@ vim.opt.showcmd = false
 vim.opt.ruler = true
 vim.opt.pumheight = 10
 vim.opt.fillchars = { eob = " " }
+vim.opt.cmdheight = 0
 
 -- Search
 vim.opt.hlsearch = true
@@ -257,19 +258,21 @@ local plugins = {
 
   -- Colorscheme
   {
-    "sainnhe/gruvbox-material",
+    "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.g.gruvbox_material_background = "hard"
-      vim.g.gruvbox_material_foreground = "mix"
-      vim.cmd("colorscheme gruvbox-material")
+      require("kanagawa").setup({
+        theme = "dragon",
+        colors = { theme = { dragon = { ui = { bg_gutter = "NONE" } } } },
+      })
+      vim.cmd("colorscheme kanagawa-dragon")
     end,
   },
 }
 
 require("lazy").setup(plugins, {
-  install = { missing = true, colorscheme = { "gruvbox-material" } },
+  install = { missing = true, colorscheme = { "kanagawa-dragon" } },
   checker = { enabled = true, notify = false },
   change_detection = { enabled = true, notify = false },
   performance = {
@@ -367,11 +370,11 @@ api.nvim_create_autocmd("TermClose", {
 -- Dim when tmux pane loses focus
 api.nvim_create_autocmd("FocusLost", {
   callback = function()
-    vim.cmd("highlight Normal guibg=#242424")
+    vim.cmd("highlight Normal guibg=#181616")
   end,
 })
 api.nvim_create_autocmd("FocusGained", {
   callback = function()
-    vim.cmd("highlight Normal guibg=#1d2021")
+    vim.cmd("highlight Normal guibg=#181616")
   end,
 })
