@@ -190,6 +190,24 @@ local plugins = {
     opts = {},
   },
 
+  -- Inline images in markdown
+  {
+    "3rd/image.nvim",
+    ft = { "markdown" },
+    build = false,
+    opts = {
+      processor = "magick_cli",
+      integrations = {
+        markdown = {
+          enabled = true,
+          only_render_image_at_cursor = true,
+          filetypes = { "markdown" },
+        },
+      },
+      max_height_window_percentage = 40,
+    },
+  },
+
   -- Mini.nvim
   {
     "echasnovski/mini.nvim",

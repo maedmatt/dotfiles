@@ -154,7 +154,8 @@ install_opencode() {
 install_codex() {
     echo "Installing Codex config..."
     mkdir -p "$HOME/.codex"
-    link "$DOTFILES/shared/codex/AGENT.md" "$HOME/.codex/AGENT.md"
+    link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
+    link "$DOTFILES/shared/codex/config.toml" "$HOME/.codex/config.toml"
     link "$DOTFILES/shared/codex/prompts" "$HOME/.codex/prompts"
     link "$DOTFILES/shared/skills" "$HOME/.codex/skills"
 }
