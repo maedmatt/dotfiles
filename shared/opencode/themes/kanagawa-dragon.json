@@ -1,0 +1,39 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "bg": "#181616",
+    "bg_dim": "#0d0c0c",
+    "bg_surface": "#1D1C19",
+    "bg_element": "#282727",
+    "bg_highlight": "#393836",
+    "fg": "#c5c9c5",
+    "gray": "#625e5a",
+    "gray2": "#9e9b93",
+    "red": "#c4746e",
+    "green": "#87a987",
+    "yellow": "#c4b28a",
+    "blue": "#8ba4b0",
+    "purple": "#a292a3",
+    "aqua": "#8ea4a2",
+    "orange": "#b6927b"
+  },
+  "theme": {
+    "primary": { "dark": "yellow", "light": "yellow" },
+    "secondary": { "dark": "blue", "light": "blue" },
+    "accent": { "dark": "aqua", "light": "aqua" },
+    "error": { "dark": "red", "light": "red" },
+    "warning": { "dark": "orange", "light": "orange" },
+    "success": { "dark": "green", "light": "green" },
+    "info": { "dark": "blue", "light": "blue" },
+    "text": { "dark": "fg", "light": "fg" },
+    "textMuted": { "dark": "gray2", "light": "gray2" },
+    "background": { "dark": "bg", "light": "bg" },
+    "backgroundPanel": { "dark": "bg_surface", "light": "bg_surface" },
+    "backgroundElement": { "dark": "bg_element", "light": "bg_element" },
+    "border": { "dark": "bg_highlight", "light": "bg_highlight" },
+    "borderActive": { "dark": "yellow", "light": "yellow" },
+    "borderSubtle": { "dark": "bg_element", "light": "bg_element" },
+    "diffAdded": { "dark": "green", "light": "green" },
+    "diffRemoved": { "dark": "red", "light": "red" }
+  }
+}

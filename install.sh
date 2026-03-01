@@ -146,6 +146,7 @@ install_opencode() {
     echo "Installing OpenCode config..."
     mkdir -p "$HOME/.config/opencode"
     link "$DOTFILES/shared/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+    link "$DOTFILES/shared/opencode/tui.json" "$HOME/.config/opencode/tui.json"
     link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
     link "$DOTFILES/shared/opencode/themes" "$HOME/.config/opencode/themes"
     link "$DOTFILES/shared/skills" "$HOME/.config/opencode/skills"
