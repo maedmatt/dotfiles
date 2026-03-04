@@ -1,1 +1,11 @@
+model = "gpt-5.3-codex"
 model_instructions_file = "~/.codex/AGENTS.md"
+model_reasoning_effort = "xhigh"
+personality = "pragmatic"
+
+[features]
+steer = true
+multi_agent = true
+
+[projects."/Users/matteo/Documents/01 Projects/locosonic"]
+trust_level = "trusted"

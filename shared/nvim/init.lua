@@ -175,7 +175,7 @@ local plugins = {
     config = function()
       require("nvim-treesitter").setup({
         ensure_installed = {
-          "bash", "c", "html", "javascript", "json", "lua",
+          "bash", "c", "html", "javascript", "json", "latex", "lua",
           "markdown", "markdown_inline", "python", "typescript", "vim", "yaml",
         },
       })
@@ -271,6 +271,16 @@ local plugins = {
           map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
         end,
       })
+    end,
+  },
+
+  -- LaTeX
+  {
+    "lervag/vimtex",
+    ft = { "tex" },
+    config = function()
+      vim.g.vimtex_view_method = "zathura"
+      vim.g.vimtex_compiler_method = "latexmk"
     end,
   },
 

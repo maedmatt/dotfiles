@@ -8,10 +8,25 @@
       "Grep"
     ]
   },
-  "hooks": {},
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'export PATH=/Library/TeX/texbin:/usr/local/bin:/usr/bin:/bin:$PATH; FILE=$(jq -r \".tool_input.file_path\" <<< \"$(cat)\"); if [[ \"$FILE\" == *.tex ]]; then cd \"$(dirname \"$FILE\")\" && latexmk -pdf -quiet \"$(basename \"$FILE\")\" 2>&1 | tail -5; fi; exit 0'",
+            "timeout": 60,
+            "statusMessage": "Compiling LaTeX"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "/Users/matteo/.bun/bin/bunx -y ccstatusline@latest"
   },
-  "defaultMode": "default"
+  "defaultMode": "default",
+  "effortLevel": "high"
 }
