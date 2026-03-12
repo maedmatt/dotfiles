@@ -26,6 +26,13 @@ macos/              # zshrc, ghostty
 linux/              # bashrc, ghostty
 ```
 
+## Agent rules
+
+The shared agent rules are layered on purpose:
+- `shared/claude/rules/general.md` is the cross-project base
+- `shared/claude/rules/robotics.md` is an optional domain overlay for robotics and safety-critical work
+- `shared/codex/AGENTS.md` stays general, while optional Codex prompts can carry domain-specific context
+
 ## Skills
 
 Skills are shared across Claude Code, Codex, and OpenCode via symlinks to `shared/skills/`.
