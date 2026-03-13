@@ -2,6 +2,8 @@ model = "gpt-5.4"
 model_instructions_file = "~/.codex/AGENTS.md"
 model_reasoning_effort = "xhigh"
 personality = "pragmatic"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
 
 [features]
 steer = true
