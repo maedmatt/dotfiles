@@ -31,6 +31,6 @@
     "type": "command",
     "command": "/Users/matteo/.bun/bin/bunx -y ccstatusline@latest"
   },
-  "defaultMode": "default",
-  "effortLevel": "high"
+  "showThinkingSummaries": true,
+  "defaultMode": "default"
 }
