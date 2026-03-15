@@ -165,6 +165,7 @@ install_dotfiles() {
     echo "Installing dotfiles..."
     # Shared
     link "$DOTFILES/shared/tmux.conf" "$HOME/.tmux.conf"
+    link "$DOTFILES/shared/tmux/scripts" "$HOME/.tmux/scripts"
     link "$DOTFILES/shared/nvim" "$HOME/.config/nvim"
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
     # Platform-specific

@@ -339,21 +339,17 @@ local plugins = {
 
   -- Colorscheme
   {
-    "rebelot/kanagawa.nvim",
+    "nyoom-engineering/oxocarbon.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      require("kanagawa").setup({
-        theme = "dragon",
-        colors = { theme = { dragon = { ui = { bg_gutter = "NONE" } } } },
-      })
-      vim.cmd("colorscheme kanagawa-dragon")
+      vim.cmd("colorscheme oxocarbon")
     end,
   },
 }
 
 require("lazy").setup(plugins, {
-  install = { missing = true, colorscheme = { "kanagawa-dragon" } },
+  install = { missing = true, colorscheme = { "oxocarbon" } },
   checker = { enabled = true, notify = false },
   change_detection = { enabled = true, notify = false },
   performance = {
@@ -445,17 +441,5 @@ api.nvim_create_autocmd("TermClose", {
     if vim.v.event.status == 0 then
       vim.cmd("bdelete!")
     end
-  end,
-})
-
--- Dim when tmux pane loses focus
-api.nvim_create_autocmd("FocusLost", {
-  callback = function()
-    vim.cmd("highlight Normal guibg=#181616")
-  end,
-})
-api.nvim_create_autocmd("FocusGained", {
-  callback = function()
-    vim.cmd("highlight Normal guibg=#181616")
   end,
 })
