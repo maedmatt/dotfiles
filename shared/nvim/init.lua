@@ -28,7 +28,7 @@ vim.opt.showcmd = false
 vim.opt.ruler = true
 vim.opt.pumheight = 10
 vim.opt.fillchars = { eob = " " }
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 
 -- Search
 vim.opt.hlsearch = true
@@ -225,6 +225,28 @@ local plugins = {
     end,
   },
 
+  -- Bufferline (tabs)
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("bufferline").setup({
+        options = {
+          mode = "buffers",
+          separator_style = "thin",
+          always_show_bufferline = true,
+          sort_by = "insert_after_current",
+          show_buffer_close_icons = false,
+          show_close_icon = false,
+          offsets = {
+            { filetype = "NvimTree", text = "Explorer", highlight = "Directory", padding = 1 },
+          },
+        },
+      })
+    end,
+  },
+
   -- FZF (Fuzzy Finder)
   {
     "ibhagwan/fzf-lua",
@@ -271,6 +293,37 @@ local plugins = {
           map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
         end,
       })
+    end,
+  },
+
+  -- File explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      local api = require("nvim-tree.api")
+
+      local function on_attach(bufnr)
+        local function opts(desc)
+          return { buffer = bufnr, desc = desc, noremap = true, silent = true, nowait = true }
+        end
+        api.config.mappings.default_on_attach(bufnr)
+        vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
+        vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close directory"))
+      end
+
+      require("nvim-tree").setup({
+        on_attach = on_attach,
+        sync_root_with_cwd = true,
+        update_focused_file = { enable = true, update_root = false },
+        view = { width = 35, side = "left", preserve_window_proportions = true },
+        renderer = { highlight_opened_files = "all" },
+        git = { enable = true },
+        filesystem_watchers = { enable = true },
+        actions = { open_file = { quit_on_open = false, resize_window = true } },
+      })
+
+      vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" })
     end,
   },
 
