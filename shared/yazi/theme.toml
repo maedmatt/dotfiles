@@ -1,2 +1,1 @@
-[flavor]
-dark = "gruvbox-dark"
+# Use default theme (inherits terminal colors)
