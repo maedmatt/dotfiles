@@ -1,3 +1,8 @@
+---
+name: nano-banana-pro
+description: Generate and edit images using Google's Nano Banana Pro API (Gemini 3 Pro Image)
+---
+
 # Nano Banana Pro Image Generation & Editing Tool
 
 This is a skill for generating and editing images using Google's Nano Banana Pro API (Gemini 3 Pro Image).
