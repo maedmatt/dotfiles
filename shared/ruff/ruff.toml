@@ -1,0 +1,22 @@
+target-version = "py311"
+line-length = 88
+
+[lint]
+select = [
+    "E", "F", "W",   # pycodestyle + pyflakes (real errors)
+    "I",              # import sorting
+    "UP",             # pyupgrade (modern Python idioms)
+    "B",              # bugbear (likely bugs)
+    "SIM",            # simplify (unnecessary complexity)
+    "RUF",            # ruff-specific rules
+    "N",              # naming conventions (camelCase, UPPER_CASE, etc.)
+    "PIE",            # misc lint (unnecessary pass, range(0, x), etc.)
+    "PT",             # pytest style (consistent test patterns)
+    "C4",             # comprehension style (unnecessary list() calls)
+    "TCH",            # type-checking imports (move type-only imports to TYPE_CHECKING)
+]
+fixable = ["ALL"]
+ignore = [
+    "E501",     # line too long (formatter handles this)
+    "N806",     # variable in function should be lowercase (common in math: X, A, T)
+]

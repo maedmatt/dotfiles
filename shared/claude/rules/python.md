@@ -1,31 +1,34 @@
 ---
-description: Python Coding Guidelines
-paths: "*.py,pyproject.toml"
+description: Python coding guidelines for AI-assisted development
+paths:
+  - "**/*.py"
+  - "pyproject.toml"
 ---
 # Python Coding Guidelines
 
 After finishing all edits, run `make lint` to format, fix, and type-check.
-Do not worry about import ordering or style formatting during edits — focus on
-correctness and design.
+Do not worry about import ordering or formatting during edits — ruff handles that.
 
 ## Language
 
-- Python 3.11+. Use modern features: `str | None`, `StrEnum`, `@override`
-  from `typing_extensions`, `from __future__ import annotations`.
-- Use `pathlib.Path` over string paths. `Path(f).read_text()` over `with open(...)`.
-- Absolute imports only. Never relative (`from .module import ...`).
-- Import `Callable`, `Coroutine` etc. from `collections.abc`, not `typing`.
+- Python 3.11+. Always start files with `from __future__ import annotations`.
+- Modern syntax: `str | None`, `dict[str, int]`, not `Optional`, `Dict`.
+- `pathlib.Path` over string paths. Accept `str | Path`, convert immediately.
+- Absolute imports only. `from package.module import X`, never relative.
+- `@dataclass` for structured data. `field(default_factory=...)` for mutable defaults.
 
 ## Types
 
-- Full type annotations on all public functions and methods.
-- `@override` on every method that overrides a base class.
+- Annotate function signatures (params + return). Skip annotations on obvious locals.
+- Use `TYPE_CHECKING` blocks to avoid circular imports.
 - If a pyright error is unfixable, use `# pyright: ignore` with a reason.
-  Never disable pyright rules globally without asking.
 
 ## Style
 
-- Docstrings: explain *why*, not *what*. Skip args/returns if obvious from types.
-- Multi-line strings: always `dedent().strip()`, never flush left.
-- No trivial wrappers or delegation methods.
-- Mention backward-compatibility breakage. No compat shims unless confirmed.
+- Docstrings on classes and non-obvious public functions. Explain purpose, not mechanics.
+  Skip docstrings on trivial methods, getters, or anything obvious from the signature.
+- Comments explain *why*, never *what*. No commented-out code.
+- Early returns over nested conditionals.
+- Simple and direct — no unnecessary abstractions, factories, or indirection.
+- Validate inputs with descriptive error messages. Let everything else propagate.
+- No defensive try/except unless recovery is actually possible.

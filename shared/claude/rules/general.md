@@ -65,27 +65,8 @@ or safety-critical systems.
 - No gratuitous enthusiasm or self-congratulation. Don't say "I've meticulously improved
   the code." Say specifically what you did.
 
-## Remote Output
-
-When I paste terminal output (like `df -h`, `docker images`, `nvidia-smi`, error logs),
-I am sharing output from a remote machine or another session. Do NOT try to run those
-commands locally. Analyze what I've pasted.
-
 ## Tool Usage
 
 Use dedicated tools instead of Bash: Glob instead of `find`/`ls`, Grep instead of
 `grep`/`rg`, Read instead of `cat`/`head`/`tail`. Only use Bash for commands with no
 dedicated tool equivalent.
-
-## Task Persistence
-
-Context is automatically compacted as it approaches its limit. Do not stop tasks early
-due to token budget concerns. Save progress and state to memory before context refreshes.
-
-## Comments
-
-- Concise and clear. Suitable for production.
-- DO explain *why* when the intent is subtle, non-obvious, or avoids a bug.
-- DO NOT restate what is obvious from names, types, or code structure.
-- DO NOT use numbered steps, decorated headings, or emojis in comments.
-- DO NOT leave comments about what you changed ("Added this function").

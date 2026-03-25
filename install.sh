@@ -168,6 +168,7 @@ install_dotfiles() {
     link "$DOTFILES/shared/tmux/scripts" "$HOME/.tmux/scripts"
     link "$DOTFILES/shared/nvim" "$HOME/.config/nvim"
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
+    link "$DOTFILES/shared/ruff/ruff.toml" "$HOME/.config/ruff/ruff.toml"
     # Platform-specific
     link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"

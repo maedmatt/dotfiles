@@ -111,17 +111,7 @@ local plugins = {
             })
           end,
           ["ruff"] = function()
-            lspconfig.ruff.setup({
-              init_options = {
-                settings = {
-                  lineLength = 88,
-                  lint = {
-                    select = { "E", "F", "W", "I", "UP", "B" },
-                    ignore = { "E501" },
-                  },
-                },
-              },
-            })
+            lspconfig.ruff.setup({})
           end,
         },
       })
