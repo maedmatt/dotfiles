@@ -7,6 +7,7 @@ alias la='ls -la'
 alias vim="nvim"
 alias vi="nvim"
 alias lg="lazygit"
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # the code are the 256 color codes
 # refrence here --> https://www.ditig.com/256-colors-cheat-sheet
@@ -51,9 +52,20 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# bun completions
-[ -s "/Users/matteo/.bun/_bun" ] && source "/Users/matteo/.bun/_bun"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+# pnpm
+export PNPM_HOME="/Users/kai/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# OpenClaw Completion
+autoload -Uz compinit
+compinit
+source "/Users/kai/.openclaw/completions/openclaw.zsh"
