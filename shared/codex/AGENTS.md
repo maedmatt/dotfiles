@@ -20,11 +20,9 @@ or safety-critical systems.
 
 - **Don't reinvent — research first.** Before writing anything non-trivial, search
   online. Use WebSearch, DeepWiki, and WebFetch aggressively. Look at how existing
-  projects, libraries, and tools already solve the problem.
-  The answer almost always exists — find it, understand it, adapt it. Don't clone entire
-  repos; read their approach, extract the pattern, and translate it into our code. If
-  there's a tool or library that does what we need, prefer using it over writing it from
-  scratch.
+  projects, libraries, and tools already solve the problem. The answer almost always
+  exists — find it, understand it, adapt it. Don't clone entire repos; read their
+  approach, extract the pattern, and translate it into our code. 
 
 - **Explain when it helps.** When using a new command, tool, or technique, briefly
   explain what it does and why if that adds learning value. Do not narrate obvious
@@ -50,43 +48,8 @@ or safety-critical systems.
 - Use a direct, natural tone. No fake praise, no generic assistant patter, and no
   progress theater.
 
-- Do not use announce-then-confirm loops like "I'm going to check X" followed by
-  "that's what I did." Either say the next step before doing it, or give the result
-  after. Not both.
-
-- Default to flowing prose. Use bullet lists only when the items are genuinely
-  discrete or a comparison is clearer as a list.
-
-- After a bounded edit is clearly requested, do not keep asking for permission on
-  every small step. Ask before destructive, risky, or externally visible changes.
-
 - No gratuitous enthusiasm or self-congratulation. Don't say "I've meticulously improved
   the code." Say specifically what you did.
-
-## Remote Output
-
-When I paste terminal output (like `df -h`, `docker images`, `nvidia-smi`, error logs),
-I am sharing output from a remote machine or another session. Do NOT try to run those
-commands locally. Analyze what I've pasted.
-
-## Tool Usage
-
-Use dedicated tools instead of Bash: Glob instead of `find`/`ls`, Grep instead of
-`grep`/`rg`, Read instead of `cat`/`head`/`tail`. Only use Bash for commands with no
-dedicated tool equivalent.
-
-## Task Persistence
-
-Context is automatically compacted as it approaches its limit. Do not stop tasks early
-due to token budget concerns. Save progress and state to memory before context refreshes.
-
-## Comments
-
-- Concise and clear. Suitable for production.
-- DO explain *why* when the intent is subtle, non-obvious, or avoids a bug.
-- DO NOT restate what is obvious from names, types, or code structure.
-- DO NOT use numbered steps, decorated headings, or emojis in comments.
-- DO NOT leave comments about what you changed ("Added this function").
 
 # Git Commits
 
@@ -105,27 +68,28 @@ Examples:
 # Python Coding Guidelines
 
 After finishing all edits, run `make lint` to format, fix, and type-check.
-Do not worry about import ordering or style formatting during edits — focus on
-correctness and design.
+Do not worry about import ordering or formatting during edits — ruff handles that.
 
 ## Language
 
-- Python 3.11+. Use modern features: `str | None`, `StrEnum`, `@override`
-  from `typing_extensions`, `from __future__ import annotations`.
-- Use `pathlib.Path` over string paths. `Path(f).read_text()` over `with open(...)`.
-- Absolute imports only. Never relative (`from .module import ...`).
-- Import `Callable`, `Coroutine` etc. from `collections.abc`, not `typing`.
+- Python 3.11+. Always start files with `from __future__ import annotations`.
+- Modern syntax: `str | None`, `dict[str, int]`, not `Optional`, `Dict`.
+- `pathlib.Path` over string paths. Accept `str | Path`, convert immediately.
+- Absolute imports only. `from package.module import X`, never relative.
+- `@dataclass` for structured data. `field(default_factory=...)` for mutable defaults.
 
 ## Types
 
-- Full type annotations on all public functions and methods.
-- `@override` on every method that overrides a base class.
+- Annotate function signatures (params + return). Skip annotations on obvious locals.
+- Use `TYPE_CHECKING` blocks to avoid circular imports.
 - If a pyright error is unfixable, use `# pyright: ignore` with a reason.
-  Never disable pyright rules globally without asking.
 
 ## Style
 
-- Docstrings: explain *why*, not *what*. Skip args/returns if obvious from types.
-- Multi-line strings: always `dedent().strip()`, never flush left.
-- No trivial wrappers or delegation methods.
-- Mention backward-compatibility breakage. No compat shims unless confirmed.
+- Docstrings on classes and non-obvious public functions. Explain purpose, not mechanics. 
+- Skip docstrings on trivial methods, getters, or anything obvious from the signature.
+- Comments explain *why*, never *what*. No commented-out code.
+- Early returns over nested conditionals.
+- Simple and direct — no unnecessary abstractions, factories, or indirection.
+- Validate inputs with descriptive error messages. Let everything else propagate.
+- No defensive try/except unless recovery is actually possible.

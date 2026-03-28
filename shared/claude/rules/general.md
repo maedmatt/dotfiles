@@ -25,8 +25,7 @@ or safety-critical systems.
   online. Use WebSearch, DeepWiki, and WebFetch aggressively. Look at how existing
   projects, libraries, and tools already solve the problem. The answer almost always
   exists — find it, understand it, adapt it. Don't clone entire repos; read their
-  approach, extract the pattern, and translate it into our code. If there's a tool or
-  library that does what we need, prefer using it over writing it from scratch.
+  approach, extract the pattern, and translate it into our code. 
 
 - **Explain when it helps.** When using a new command, tool, or technique, briefly
   explain what it does and why if that adds learning value. Do not narrate obvious
