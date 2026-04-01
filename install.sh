@@ -65,14 +65,8 @@ install_apps() {
         sudo apt autoremove -y
         
         sudo apt update
-        sudo apt install -y tmux btop unzip ripgrep imagemagick ghostscript python3-venv
-        
-        # Node.js LTS
-        if ! node --version 2>/dev/null | grep -qE "^v(1[8-9]|[2-9][0-9])"; then
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-        fi
-        
+        sudo apt install -y tmux btop unzip ripgrep
+
         # fd
         if ! fd --version 2>/dev/null | grep -qE "fd (9|10)\."; then
             V=$(gh_latest sharkdp/fd)
@@ -81,8 +75,8 @@ install_apps() {
             sudo dpkg -i /tmp/fd.deb
             rm /tmp/fd.deb
         fi
-        
-        # bob
+
+        # bob (neovim version manager)
         if ! command -v bob &> /dev/null; then
             V=$(gh_latest MordechaiHadad/bob)
             wget -qO /tmp/bob.zip "https://github.com/MordechaiHadad/bob/releases/download/${V}/bob-linux-${ARCH}.zip"
@@ -91,43 +85,28 @@ install_apps() {
             mv /tmp/bob-temp/bob-linux-${ARCH}/bob ~/.local/bin/
             rm -rf /tmp/bob.zip /tmp/bob-temp
         fi
-        
+
         # neovim via bob
         if ! command -v nvim &> /dev/null; then
             ~/.local/bin/bob install stable && ~/.local/bin/bob use stable
         fi
-        
+
         # uv
         if ! command -v uv &> /dev/null; then
             curl -LsSf https://astral.sh/uv/install.sh | sh
         fi
-        
-        # yazi
-        if ! command -v yazi &> /dev/null; then
-            V=$(gh_latest sxyazi/yazi)
-            wget -qO /tmp/yazi.zip "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${ARCH}-unknown-linux-musl.zip"
-            unzip -q /tmp/yazi.zip -d /tmp/yazi-temp
-            sudo mv /tmp/yazi-temp/*/yazi /usr/local/bin/
-            sudo mv /tmp/yazi-temp/*/ya /usr/local/bin/
-            rm -rf /tmp/yazi.zip /tmp/yazi-temp
-        fi
-        
+
         # lazygit
         if ! command -v lazygit &> /dev/null; then
             V=$(gh_latest jesseduffield/lazygit)
             LG_ARCH=$([ "$ARCH" = "x86_64" ] && echo "x86_64" || echo "arm64")
             curl -sL "https://github.com/jesseduffield/lazygit/releases/download/${V}/lazygit_${V#v}_Linux_${LG_ARCH}.tar.gz" | sudo tar -xz -C /usr/local/bin lazygit
         fi
-        
+
         # fzf
         if ! command -v fzf &> /dev/null; then
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
-        fi
-        
-        # mermaid-cli
-        if command -v npm &> /dev/null && ! command -v mmdc &> /dev/null; then
-            sudo npm install -g @mermaid-js/mermaid-cli
         fi
     fi
 }
