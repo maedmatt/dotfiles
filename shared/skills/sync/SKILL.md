@@ -31,7 +31,7 @@ images, progress messages, and system reminders.
 Also read the current state of these files (if they exist):
 - MEMORY.md at the auto memory path shown in your system prompt
 - CLAUDE.md at the project root `.claude/CLAUDE.md`
-- The global rules at `~/.claude/rules/` (to avoid duplicating what's already there)
+- The global rules at `~/.claude/CLAUDE.md` (to avoid duplicating what's already there)
 
 ## Step 2: Update MEMORY.md
 
@@ -65,7 +65,7 @@ Examples of when to update:
 
 Review the conversation for recurring patterns about how the user prefers to
 work, communicate, or be assisted. Surface anything that should become a
-permanent rule in `~/.claude/rules/general.md`.
+permanent rule in `~/.claude/CLAUDE.md`.
 
 Present suggestions as a short list. For each:
 - The proposed rule (one or two sentences)

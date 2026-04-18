@@ -28,10 +28,12 @@ linux/              # bashrc, ghostty
 
 ## Agent rules
 
-The shared agent rules are layered on purpose:
-- `shared/claude/rules/general.md` is the cross-project base
-- `shared/claude/rules/robotics.md` is an optional domain overlay for robotics and safety-critical work
-- `shared/codex/AGENTS.md` stays general, while optional Codex prompts can carry domain-specific context
+Single always-on rule file, shared across all three agents:
+- `shared/claude/CLAUDE.md` is the cross-project base
+- `shared/codex/AGENTS.md` is a symlink to the same file
+- `shared/opencode/opencode.json` references the same file via its `instructions` array
+
+Task-specific rules (commits style, Python conventions) live as skills under `shared/skills/` and trigger on relevance.
 
 ## Skills
 

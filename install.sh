@@ -114,7 +114,7 @@ install_apps() {
 install_claude() {
     echo "Installing Claude Code config..."
     mkdir -p "$HOME/.claude"
-    link "$DOTFILES/shared/claude/rules" "$HOME/.claude/rules"
+    link "$DOTFILES/shared/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
     link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
     link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
@@ -144,7 +144,6 @@ install_dotfiles() {
     echo "Installing dotfiles..."
     # Shared
     link "$DOTFILES/shared/tmux.conf" "$HOME/.tmux.conf"
-    link "$DOTFILES/shared/tmux/scripts" "$HOME/.tmux/scripts"
     link "$DOTFILES/shared/nvim" "$HOME/.config/nvim"
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
     link "$DOTFILES/shared/ruff/ruff.toml" "$HOME/.config/ruff/ruff.toml"

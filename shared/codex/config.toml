@@ -4,6 +4,7 @@ model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 approval_policy = "on-request"
 sandbox_mode = "read-only"
+service_tier = "fast"
 
 [features]
 steer = true
@@ -11,3 +12,9 @@ multi_agent = true
 
 [projects."/Users/matteo/Documents/01 Projects/locosonic"]
 trust_level = "trusted"
+
+[projects."/Users/matteo/Library/Mobile Documents/com~apple~CloudDocs/Master's Thesis"]
+trust_level = "trusted"
+
+[plugins."canva@openai-curated"]
+enabled = true

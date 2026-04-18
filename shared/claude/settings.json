@@ -1,16 +1,15 @@
 {
   "env": {
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-5-20250929"
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
   },
   "permissions": {
     "allow": [
       "Read",
       "Grep",
-      "Bash(obsidian *)",
-      "Bash(git diff*)",
-      "Bash(git status*)",
-      "Bash(git log --oneline -5*)"
-    ]
+      "Bash(obsidian *)"
+   ]
   },
   "hooks": {
     "PostToolUse": [
@@ -31,6 +30,8 @@
     "type": "command",
     "command": "/Users/matteo/.bun/bin/bunx -y ccstatusline@latest"
   },
+  "effortLevel": "xhigh",
+  "advisorModel": "opus",
   "showThinkingSummaries": true,
   "defaultMode": "default"
 }
