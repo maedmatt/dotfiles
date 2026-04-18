@@ -9,7 +9,7 @@
       "Read",
       "Grep",
       "Bash(obsidian *)"
-   ]
+    ]
   },
   "hooks": {
     "PostToolUse": [
