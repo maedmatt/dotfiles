@@ -76,19 +76,12 @@ install_apps() {
             rm /tmp/fd.deb
         fi
 
-        # bob (neovim version manager)
-        if ! command -v bob &> /dev/null; then
-            V=$(gh_latest MordechaiHadad/bob)
-            wget -qO /tmp/bob.zip "https://github.com/MordechaiHadad/bob/releases/download/${V}/bob-linux-${ARCH}.zip"
-            unzip -o /tmp/bob.zip -d /tmp/bob-temp
-            mkdir -p ~/.local/bin
-            mv /tmp/bob-temp/bob-linux-${ARCH}/bob ~/.local/bin/
-            rm -rf /tmp/bob.zip /tmp/bob-temp
-        fi
-
-        # neovim via bob
+        # neovim (pinned tarball)
         if ! command -v nvim &> /dev/null; then
-            ~/.local/bin/bob install stable && ~/.local/bin/bob use stable
+            curl -L https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
+            sudo tar -C /opt -xzf /tmp/nvim.tar.gz
+            sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+            rm /tmp/nvim.tar.gz
         fi
 
         # uv

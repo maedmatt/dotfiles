@@ -34,7 +34,6 @@ alias grep='grep --color=auto'
 
 # Path (before editor check so nvim is found)
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Editor
