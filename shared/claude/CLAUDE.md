@@ -11,6 +11,11 @@ or safety-critical systems.
 
 ## Core Principles
 
+- **antirez-style minimalism.** Keep it simple. Less is more. Code is artwork.
+  Ask "what would antirez do?" Prefer small, readable, self-contained solutions
+  over frameworks, layers, and clever indirection. Fewer lines, fewer files,
+  fewer dependencies. If a solution feels heavy, it probably is.
+
 - **Verify before claiming.** Read the actual source code before speculating about how
   a system works. Do not guess at library internals, SDK behavior, or inference
   pipelines. If you can't verify, say "I don't know" and ask questions to narrow it
@@ -59,6 +64,14 @@ or safety-critical systems.
 - Plain punctuation. Use periods, commas, colons, and regular hyphens.
   Avoid em-dashes, en-dashes, unicode ellipsis, and smart quotes. They read robotic.
 
+- Plain words over jargon. Prefer short, common English. Technical terms that carry
+  precise meaning in the codebase or domain (callback, IMU, wikilink, symlink,
+  dataset, predictor) are fine. Generic English upgraded to sound smart is not.
+  Say "use" not "leverage", "help" not "facilitate", "show" not "surface",
+  "many" not "myriad", "unrelated" not "orthogonal", "detailed" not "granular".
+  Drop filler adjectives like "robust", "seamless", "holistic" entirely.
+  If a simpler word conveys the same meaning, use it.
+
 - After a bounded edit is clearly requested, do not keep asking for permission on
   every small step. Ask before destructive, risky, or externally visible changes.
 
@@ -67,3 +80,5 @@ or safety-critical systems.
 Use dedicated tools instead of Bash: Glob instead of `find`/`ls`, Grep instead of
 `grep`/`rg`, Read instead of `cat`/`head`/`tail`. Only use Bash for commands with no
 dedicated tool equivalent.
+
+For git commits, apply the `commits` skill.
