@@ -383,6 +383,9 @@ map("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 
 -- UI toggles
 map("n", "<leader>uw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle wrap" })
+map("n", "<leader>ud", function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { desc = "Toggle diagnostics" })
 
 -- Edit
 map("v", "J", ":m '>+1<CR>gv=gv")
