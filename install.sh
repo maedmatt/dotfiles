@@ -57,7 +57,7 @@ install_apps() {
         
         # Helper to get latest GitHub release tag
         gh_latest() {
-            curl -sfL "https://api.github.com/repos/$1/releases/latest" | grep -Po '"tag_name": "\K[^"]*'
+            curl -sfL "https://api.github.com/repos/$1/releases/latest" | grep -Po '"tag_name":\s*"\K[^"]*'
         }
         
         # Remove conflicting packages
