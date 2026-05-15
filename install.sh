@@ -97,7 +97,7 @@ install_apps() {
         fi
 
         # fzf
-        if ! command -v fzf &> /dev/null; then
+        if ! fzf --bash &> /dev/null; then
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
         fi
