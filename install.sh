@@ -78,7 +78,7 @@ install_apps() {
 
         # neovim (pinned tarball)
         if ! command -v nvim &> /dev/null; then
-            curl -L https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
+            curl -L https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
             sudo tar -C /opt -xzf /tmp/nvim.tar.gz
             sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
             rm /tmp/nvim.tar.gz

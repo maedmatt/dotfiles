@@ -28,7 +28,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/matteo/.bun/bin/bunx -y ccstatusline@latest"
+    "command": "bunx -y ccstatusline@latest"
   },
   "effortLevel": "xhigh",
   "advisorModel": "opus",
