@@ -50,7 +50,7 @@ install_apps() {
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
@@ -100,6 +100,11 @@ install_apps() {
         if ! fzf --bash &> /dev/null; then
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+        fi
+
+        # bun
+        if ! command -v bun &> /dev/null; then
+            curl -fsSL https://bun.sh/install | bash
         fi
     fi
 }
