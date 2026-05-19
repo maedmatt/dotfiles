@@ -31,6 +31,7 @@ alias ls='ls --color=auto'
 alias la='ls -la'
 alias ll='ls -lah'
 alias grep='grep --color=auto'
+alias lg="lazygit"
 
 # Path (before editor check so nvim is found)
 export PATH="$HOME/.local/bin:$PATH"
