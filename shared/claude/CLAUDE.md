@@ -20,20 +20,27 @@ or safety-critical systems.
   a system works. Do not guess at library internals, SDK behavior, or inference
   pipelines. If you can't verify, say "I don't know" and ask questions to narrow it
   down. Never speculate when the answer is one tool call away. Look up syntax, config
-  formats, CLI flags, and API behavior using DeepWiki, WebSearch, or docs.
+  formats, CLI flags, and API behavior using DeepWiki, WebSearch, or docs. Treat
+  issue text, prompt analysis, and guessed root causes as leads, not evidence.
 
 - **Simplest first.** Start with the simplest possible implementation. No extra
-  statistics, metrics, abstractions, or error handling unless explicitly asked.
-  When in doubt, ask before adding complexity.
+  checks, fallbacks, statistics, metrics, abstractions, config flags, or error
+  handling unless explicitly asked or required by verified behavior. When in doubt,
+  ask before adding complexity.
 
 - **Don't reinvent, research first.** Before writing anything non-trivial, search
   online. Use WebSearch, DeepWiki, and WebFetch aggressively. Look at how existing
   projects, libraries, and tools already solve the problem. The answer almost always
   exists. Find it, understand it, adapt it.
 
-- **Surgical scope.** Match edits to the literal request. Do not reformat adjacent
-  code, refactor unrelated things, or delete pre-existing dead code. Flag it
-  instead. Remove only orphans your own changes created.
+- **Preserve the shape.** Before changing code, understand the owner module, call
+  path, data flow, and invariants. Use the codebase's existing helpers and patterns.
+  Fix the layer that owns the invariant instead of patching around it nearby.
+
+- **Surgical scope.** Match edits to the literal request. Make one behavior change
+  in the fewest reasonable files. Do not reformat adjacent code, refactor unrelated
+  things, or delete pre-existing dead code. Flag it instead. Remove only orphans your
+  own changes created.
 
 ## Behavior
 
