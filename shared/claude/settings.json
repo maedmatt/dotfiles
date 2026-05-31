@@ -1,5 +1,8 @@
 {
-  "env": {
+  "env": {},
+  "attribution": {
+    "commit": "",
+    "pr": ""
   },
   "permissions": {
     "allow": [
@@ -28,16 +31,13 @@
     "type": "command",
     "command": "bunx -y ccstatusline@latest"
   },
+  "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "advisorModel": "opus",
   "showThinkingSummaries": true,
-  "alwaysThinkingEnabled": true,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "tui": "fullscreen"
 }
