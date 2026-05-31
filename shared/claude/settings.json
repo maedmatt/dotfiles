@@ -1,15 +1,13 @@
 {
   "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
-    "CLAUDE_CODE_NO_FLICKER": "1",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
   },
   "permissions": {
     "allow": [
       "Read",
       "Grep",
       "Bash(obsidian *)"
-    ]
+    ],
+    "defaultMode": "default"
   },
   "hooks": {
     "PostToolUse": [
@@ -33,5 +31,13 @@
   "effortLevel": "xhigh",
   "advisorModel": "opus",
   "showThinkingSummaries": true,
-  "defaultMode": "default"
+  "alwaysThinkingEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "theme": "auto",
+  "verbose": true,
+  "preferredNotifChannel": "ghostty",
+  "skipAutoPermissionPrompt": true
 }
