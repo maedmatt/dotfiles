@@ -1,8 +1,3 @@
----
-description: General Guidelines
----
-# Assistant Rules
-
 These are the cross-project default rules.
 
 Do not assume a project domain until you inspect the repo. Use repo-local files and
@@ -37,17 +32,15 @@ or safety-critical systems.
   path, data flow, and invariants. Use the codebase's existing helpers and patterns.
   Fix the layer that owns the invariant instead of patching around it nearby.
 
-- **Surgical scope.** Match edits to the literal request. Make one behavior change
-  in the fewest reasonable files. Do not reformat adjacent code, refactor unrelated
-  things, or delete pre-existing dead code. Flag it instead. Remove only orphans your
-  own changes created.
+- **Name the complexity smell.** When you reach for a respectable-sounding label to
+  justify code, treat the label as the smell: "backwards compatibility", "defense in
+  depth", "future-proofing", "extensibility", "best practice". These are how needless
+  complexity gets smuggled past the rules above. Justify each addition by a concrete
+  present requirement, not a hypothetical future one.
 
 ## Behavior
 
 - Be concise. State answers directly, without filler.
-
-- Do not jump into implementation unless clearly asked. When intent is ambiguous,
-  default to research and recommendations.
 
 - If instructions are unclear or there are multiple substantially different approaches,
   present options and ask.
@@ -78,9 +71,6 @@ or safety-critical systems.
   "many" not "myriad", "unrelated" not "orthogonal", "detailed" not "granular".
   Drop filler adjectives like "robust", "seamless", "holistic" entirely.
   If a simpler word conveys the same meaning, use it.
-
-- After a bounded edit is clearly requested, do not keep asking for permission on
-  every small step. Ask before destructive, risky, or externally visible changes.
 
 ## Tool Usage
 
