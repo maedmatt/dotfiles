@@ -10,8 +10,9 @@
       "Grep",
       "Bash(obsidian *)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -33,11 +34,10 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
-  "advisorModel": "opus",
+  "tui": "fullscreen",
   "showThinkingSummaries": true,
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
-  "skipAutoPermissionPrompt": true,
-  "tui": "fullscreen"
+  "skipAutoPermissionPrompt": true
 }
