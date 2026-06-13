@@ -20,9 +20,6 @@ fi
 # Notify terminal of working directory (for tmux pane_current_path)
 precmd() { printf '\033]7;file://%s%s\033\\' "$HOST" "${PWD// /%20}" }
 
-# Bob (Neovim version manager)
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-
 # Set editor for VScode
 export EDITOR="nvim"
 bindkey -e  # zsh auto-enables vi mode when EDITOR contains "vi"
