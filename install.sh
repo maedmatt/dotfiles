@@ -50,60 +50,138 @@ install_apps() {
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun switchaudio-osx
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
-        
-        # Helper to get latest GitHub release tag
-        gh_latest() {
-            curl -sfL "https://api.github.com/repos/$1/releases/latest" | grep -Po '"tag_name":\s*"\K[^"]*'
-        }
-        
-        # Remove conflicting packages
-        sudo apt remove -y fd-find libnode-dev libnode72 2>/dev/null || true
-        sudo apt autoremove -y
-        
-        sudo apt update
-        sudo apt install -y tmux btop unzip ripgrep
 
-        # fd
-        if ! fd --version 2>/dev/null | grep -qE "fd (9|10)\."; then
-            V=$(gh_latest sharkdp/fd)
-            DEB_ARCH=$([ "$ARCH" = "x86_64" ] && echo "amd64" || echo "arm64")
-            wget -qO /tmp/fd.deb "https://github.com/sharkdp/fd/releases/download/${V}/fd-musl_${V#v}_${DEB_ARCH}.deb"
-            sudo dpkg -i /tmp/fd.deb
-            rm /tmp/fd.deb
+        if [ "$ARCH" = "x86_64" ]; then
+            DEB_ARCH="amd64"
+            NVIM_ARCH="x86_64"
+            LG_ARCH="x86_64"
+            YAZI_ARCH="x86_64"
+        elif [ "$ARCH" = "aarch64" ]; then
+            DEB_ARCH="arm64"
+            NVIM_ARCH="arm64"
+            LG_ARCH="arm64"
+            YAZI_ARCH="aarch64"
+        else
+            echo "Unsupported architecture: $ARCH"
+            exit 1
         fi
 
-        # neovim (pinned tarball)
+        gh_latest() {
+            local tag
+            tag=$(curl -fsSL "https://api.github.com/repos/$1/releases/latest" \
+                | grep -Po '"tag_name":\s*"\K[^"]+' \
+                | head -n 1)
+
+            [ -n "$tag" ] || {
+                echo "Could not fetch latest release for $1"
+                exit 1
+            }
+
+            echo "$tag"
+        }
+
+        download() {
+            local out="$1"
+            local url="$2"
+
+            curl -fLo "$out" "$url"
+        }
+
+        # Base dependencies
+        sudo apt update
+        sudo apt install -y \
+            ca-certificates \
+            curl \
+            wget \
+            git \
+            tar \
+            gzip \
+            unzip \
+            xz-utils \
+            tmux \
+            btop \
+            ripgrep \
+            bash-completion
+
+        # Remove conflicting Ubuntu fd package
+        sudo apt remove -y fd-find 2>/dev/null || true
+
+        # fd
+        if ! command -v fd &> /dev/null; then
+            V=$(gh_latest sharkdp/fd)
+            download /tmp/fd.deb \
+                "https://github.com/sharkdp/fd/releases/download/${V}/fd-musl_${V#v}_${DEB_ARCH}.deb"
+
+            sudo apt install -y /tmp/fd.deb
+            rm -f /tmp/fd.deb
+        fi
+
+        # neovim
         if ! command -v nvim &> /dev/null; then
-            curl -L https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
+            download /tmp/nvim.tar.gz \
+                "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
+
+            sudo rm -rf "/opt/nvim-linux-${NVIM_ARCH}"
             sudo tar -C /opt -xzf /tmp/nvim.tar.gz
-            sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
-            rm /tmp/nvim.tar.gz
+            sudo ln -sf "/opt/nvim-linux-${NVIM_ARCH}/bin/nvim" /usr/local/bin/nvim
+
+            rm -f /tmp/nvim.tar.gz
         fi
 
         # uv
-        if ! command -v uv &> /dev/null; then
+        if command -v uv &> /dev/null; then
+            uv self update || true
+        else
             curl -LsSf https://astral.sh/uv/install.sh | sh
         fi
 
         # lazygit
         if ! command -v lazygit &> /dev/null; then
             V=$(gh_latest jesseduffield/lazygit)
-            LG_ARCH=$([ "$ARCH" = "x86_64" ] && echo "x86_64" || echo "arm64")
-            curl -sL "https://github.com/jesseduffield/lazygit/releases/download/${V}/lazygit_${V#v}_Linux_${LG_ARCH}.tar.gz" | sudo tar -xz -C /usr/local/bin lazygit
+            TMP=$(mktemp -d)
+
+            download "$TMP/lazygit.tar.gz" \
+                "https://github.com/jesseduffield/lazygit/releases/download/${V}/lazygit_${V#v}_linux_${LG_ARCH}.tar.gz"
+
+            tar -xzf "$TMP/lazygit.tar.gz" -C "$TMP" lazygit
+            sudo install -m 0755 "$TMP/lazygit" /usr/local/bin/lazygit
+
+            rm -rf "$TMP"
         fi
 
         # fzf
-        if ! fzf --bash &> /dev/null; then
-            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-            ~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh --no-fish
+        if [ ! -d "$HOME/.fzf" ]; then
+            git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+        else
+            git -C "$HOME/.fzf" pull --ff-only
+        fi
+
+        "$HOME/.fzf/install" \
+            --key-bindings \
+            --completion \
+            --no-update-rc \
+            --no-bash \
+            --no-zsh \
+            --no-fish
+
+        # yazi
+        if ! command -v yazi &> /dev/null; then
+            V=$(gh_latest sxyazi/yazi)
+            download /tmp/yazi.deb \
+                "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${YAZI_ARCH}-unknown-linux-musl.deb"
+
+            sudo apt install -y /tmp/yazi.deb
+            rm -f /tmp/yazi.deb
         fi
 
         # bun
-        if ! command -v bun &> /dev/null; then
+        if command -v bun &> /dev/null; then
+            bun upgrade
+        else
             curl -fsSL https://bun.sh/install | bash
         fi
     fi
@@ -149,6 +227,9 @@ install_dotfiles() {
     # Platform-specific
     link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"
+    if [[ "$PLATFORM" == "macos" ]]; then
+        link "$DOTFILES/macos/sketchybar" "$HOME/.config/sketchybar"
+    fi
 }
 
 if $DO_APPS; then install_apps; fi
