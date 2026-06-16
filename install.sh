@@ -50,7 +50,7 @@ install_apps() {
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun switchaudio-osx
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
