@@ -7,12 +7,11 @@
   "permissions": {
     "allow": [
       "Read",
-      "Grep",
-      "Bash(obsidian *)"
+      "Grep"
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -34,8 +33,9 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "awaySummaryEnabled": false,
   "tui": "fullscreen",
-  "showThinkingSummaries": true,
+  "showThinkingSummaries": false,
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
