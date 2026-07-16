@@ -11,17 +11,16 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "hooks": {
-    "PostToolUse": [
+    "SessionStart": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'export PATH=/Library/TeX/texbin:/usr/local/bin:/usr/bin:/bin:$PATH; FILE=$(jq -r \".tool_input.file_path\" <<< \"$(cat)\"); if [[ \"$FILE\" == *.tex ]]; then cd \"$(dirname \"$FILE\")\" && latexmk -pdf -quiet \"$(basename \"$FILE\")\" 2>&1 | tail -5; fi; exit 0'",
-            "timeout": 60,
-            "statusMessage": "Compiling LaTeX"
+            "command": "bash '/Users/matteo/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
           }
         ]
       }
@@ -35,7 +34,7 @@
   "effortLevel": "xhigh",
   "awaySummaryEnabled": false,
   "tui": "fullscreen",
-  "showThinkingSummaries": false,
+  "showThinkingSummaries": true,
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
