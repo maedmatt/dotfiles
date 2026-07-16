@@ -8,6 +8,7 @@ git clone https://github.com/maedmatt/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ./install.sh --claude   # symlink claude code config
 ./install.sh --codex    # symlink codex config
 ./install.sh --opencode # symlink opencode config
+./install.sh --pi       # symlink pi rules and skills
 ./install.sh --all      # everything
 ```
 
@@ -28,16 +29,17 @@ linux/              # bashrc, ghostty
 
 ## Agent rules
 
-Single always-on rule file, shared across all three agents:
+Single always-on rule file, shared across all four agents:
 - `shared/claude/CLAUDE.md` is the cross-project base
 - `shared/codex/AGENTS.md` is a symlink to the same file
 - `shared/opencode/opencode.json` references the same file via its `instructions` array
+- `~/.pi/agent/AGENTS.md` symlinks to `shared/codex/AGENTS.md`
 
 Task-specific rules (commits style, Python conventions) live as skills under `shared/skills/` and trigger on relevance.
 
 ## Skills
 
-Skills are shared across Claude Code, Codex, and OpenCode via symlinks to `shared/skills/`.
+Skills are shared across Claude Code, Codex, OpenCode, and Pi via symlinks to `shared/skills/`.
 
 To install new skills:
 

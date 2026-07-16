@@ -18,6 +18,7 @@ DO_APPS=false
 DO_CLAUDE=false
 DO_CODEX=false
 DO_OPENCODE=false
+DO_PI=false
 DO_DOTFILES=false
 
 if [[ $# -eq 0 ]]; then
@@ -30,7 +31,8 @@ for arg in "$@"; do
         --claude)   DO_CLAUDE=true ;;
         --codex)    DO_CODEX=true ;;
         --opencode) DO_OPENCODE=true ;;
-        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_DOTFILES=true ;;
+        --pi)       DO_PI=true ;;
+        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_PI=true; DO_DOTFILES=true ;;
     esac
 done
 
@@ -216,6 +218,13 @@ install_codex() {
     link "$DOTFILES/shared/skills" "$HOME/.codex/skills"
 }
 
+install_pi() {
+    echo "Installing Pi config..."
+    mkdir -p "$HOME/.pi/agent"
+    link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
+    link "$DOTFILES/shared/skills" "$HOME/.pi/agent/skills"
+}
+
 install_dotfiles() {
     echo "Installing dotfiles..."
     # Shared
@@ -236,6 +245,7 @@ if $DO_APPS; then install_apps; fi
 if $DO_CLAUDE; then install_claude; fi
 if $DO_CODEX; then install_codex; fi
 if $DO_OPENCODE; then install_opencode; fi
+if $DO_PI; then install_pi; fi
 if $DO_DOTFILES; then install_dotfiles; fi
 
 echo "Done!"
