@@ -25,6 +25,15 @@
         "id": "3",
         "type": "context-length",
         "color": "brightGreen"
+      },
+      {
+        "id": "de74a109-0925-41a0-a71a-6cedf0d79be3",
+        "type": "separator"
+      },
+      {
+        "id": "ad972045-2b7e-428d-a622-7ded3bc617c9",
+        "type": "cache-hit-rate",
+        "color": "green"
       }
     ],
     [
@@ -36,8 +45,7 @@
           "abbreviateHome": "true"
         }
       }
-    ],
-    []
+    ]
   ],
   "flexMode": "full",
   "compactThreshold": 60,
