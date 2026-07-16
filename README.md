@@ -8,7 +8,7 @@ git clone https://github.com/maedmatt/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ./install.sh --claude   # symlink claude code config
 ./install.sh --codex    # symlink codex config
 ./install.sh --opencode # symlink opencode config
-./install.sh --pi       # symlink pi rules and skills
+./install.sh --pi       # symlink pi config, extensions, theme, rules, and skills
 ./install.sh --all      # everything
 ```
 
@@ -22,6 +22,7 @@ shared/
 ├── claude/         # claude code (rules, commands)
 ├── codex/          # openai codex (AGENT.md, prompts)
 ├── opencode/       # opencode (config, commands, themes)
+├── pi/             # pi settings, extensions, and themes
 └── skills/         # shared skills for all AI agents
 macos/              # zshrc, ghostty
 linux/              # bashrc, ghostty

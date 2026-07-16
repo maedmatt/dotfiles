@@ -220,9 +220,18 @@ install_codex() {
 
 install_pi() {
     echo "Installing Pi config..."
-    mkdir -p "$HOME/.pi/agent"
+    mkdir -p "$HOME/.pi/agent/extensions" "$HOME/.pi/agent/themes"
     link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
     link "$DOTFILES/shared/skills" "$HOME/.pi/agent/skills"
+    link "$DOTFILES/shared/pi/settings.json" "$HOME/.pi/agent/settings.json"
+    for extension in "$DOTFILES/shared/pi/extensions/"*.ts; do
+        [ -e "$extension" ] || continue
+        link "$extension" "$HOME/.pi/agent/extensions/$(basename "$extension")"
+    done
+    for theme in "$DOTFILES/shared/pi/themes/"*.json; do
+        [ -e "$theme" ] || continue
+        link "$theme" "$HOME/.pi/agent/themes/$(basename "$theme")"
+    done
 }
 
 install_dotfiles() {
