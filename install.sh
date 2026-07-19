@@ -242,6 +242,7 @@ install_dotfiles() {
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
     link "$DOTFILES/shared/ruff/ruff.toml" "$HOME/.config/ruff/ruff.toml"
     link "$DOTFILES/shared/btop/btop.conf" "$HOME/.config/btop/btop.conf"
+    link "$DOTFILES/shared/herdr/config.toml" "$HOME/.config/herdr/config.toml"
     # Platform-specific
     link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"

@@ -19,6 +19,7 @@ shared/
 ├── nvim/           # neovim config
 ├── tmux.conf       # tmux config
 ├── yazi/           # yazi file manager
+├── herdr/          # herdr config
 ├── claude/         # claude code (rules, commands)
 ├── codex/          # openai codex (AGENT.md, prompts)
 ├── opencode/       # opencode (config, commands, themes)
