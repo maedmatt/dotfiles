@@ -52,7 +52,8 @@ install_apps() {
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep imagemagick ghostscript mermaid-cli bun
+        # tree-sitter-cli: nvim-treesitter main branch builds parsers with it
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript mermaid-cli bun
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
@@ -61,12 +62,12 @@ install_apps() {
             DEB_ARCH="amd64"
             NVIM_ARCH="x86_64"
             LG_ARCH="x86_64"
-            YAZI_ARCH="x86_64"
+            TS_ARCH="x64"
         elif [ "$ARCH" = "aarch64" ]; then
             DEB_ARCH="arm64"
             NVIM_ARCH="arm64"
             LG_ARCH="arm64"
-            YAZI_ARCH="aarch64"
+            TS_ARCH="arm64"
         else
             echo "Unsupported architecture: $ARCH"
             exit 1
@@ -98,14 +99,11 @@ install_apps() {
         sudo apt install -y \
             ca-certificates \
             curl \
-            wget \
             git \
             tar \
             gzip \
             unzip \
             xz-utils \
-            tmux \
-            btop \
             ripgrep \
             bash-completion
 
@@ -134,11 +132,14 @@ install_apps() {
             rm -f /tmp/nvim.tar.gz
         fi
 
-        # uv
-        if command -v uv &> /dev/null; then
-            uv self update || true
-        else
-            curl -LsSf https://astral.sh/uv/install.sh | sh
+        # tree-sitter CLI, required by nvim-treesitter's main branch
+        if ! command -v tree-sitter &> /dev/null; then
+            V=$(gh_latest tree-sitter/tree-sitter)
+            download /tmp/tree-sitter.gz \
+                "https://github.com/tree-sitter/tree-sitter/releases/download/${V}/tree-sitter-linux-${TS_ARCH}.gz"
+            gzip -dc /tmp/tree-sitter.gz > /tmp/tree-sitter
+            sudo install -m 0755 /tmp/tree-sitter /usr/local/bin/tree-sitter
+            rm -f /tmp/tree-sitter.gz /tmp/tree-sitter
         fi
 
         # lazygit
@@ -170,22 +171,6 @@ install_apps() {
             --no-zsh \
             --no-fish
 
-        # yazi
-        if ! command -v yazi &> /dev/null; then
-            V=$(gh_latest sxyazi/yazi)
-            download /tmp/yazi.deb \
-                "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${YAZI_ARCH}-unknown-linux-musl.deb"
-
-            sudo apt install -y /tmp/yazi.deb
-            rm -f /tmp/yazi.deb
-        fi
-
-        # bun
-        if command -v bun &> /dev/null; then
-            bun upgrade
-        else
-            curl -fsSL https://bun.sh/install | bash
-        fi
     fi
 }
 
@@ -194,9 +179,11 @@ install_claude() {
     mkdir -p "$HOME/.claude"
     link "$DOTFILES/shared/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
-    link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
     link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
-    link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
+    if [[ "$PLATFORM" == "macos" ]]; then
+        link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
+        link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
+    fi
 }
 
 install_opencode() {
@@ -213,7 +200,9 @@ install_codex() {
     echo "Installing Codex config..."
     mkdir -p "$HOME/.codex"
     link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
-    link "$DOTFILES/shared/codex/config.toml" "$HOME/.codex/config.toml"
+    if [ -f "$DOTFILES/shared/codex/config.toml" ]; then
+        link "$DOTFILES/shared/codex/config.toml" "$HOME/.codex/config.toml"
+    fi
     link "$DOTFILES/shared/codex/prompts" "$HOME/.codex/prompts"
     link "$DOTFILES/shared/skills" "$HOME/.codex/skills"
 }
@@ -224,14 +213,24 @@ install_pi() {
     link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
     link "$DOTFILES/shared/skills" "$HOME/.pi/agent/skills"
     link "$DOTFILES/shared/pi/settings.json" "$HOME/.pi/agent/settings.json"
-    for extension in "$DOTFILES/shared/pi/extensions/"*.ts; do
+    link "$DOTFILES/shared/pi/keybindings.json" "$HOME/.pi/agent/keybindings.json"
+    link "$DOTFILES/shared/pi/cloak.json" "$HOME/.pi/agent/cloak.json"
+    link "$DOTFILES/shared/plannotator/config.json" "$HOME/.plannotator/config.json"
+    # Single-file extensions and package directories are both linked; package
+    # deps live in shared/pi/node_modules (gitignored), never symlinked.
+    for extension in "$DOTFILES/shared/pi/extensions/"*.ts "$DOTFILES/shared/pi/extensions/"*/; do
         [ -e "$extension" ] || continue
-        link "$extension" "$HOME/.pi/agent/extensions/$(basename "$extension")"
+        link "${extension%/}" "$HOME/.pi/agent/extensions/$(basename "$extension")"
     done
     for theme in "$DOTFILES/shared/pi/themes/"*.json; do
         [ -e "$theme" ] || continue
         link "$theme" "$HOME/.pi/agent/themes/$(basename "$theme")"
     done
+    if ! command -v npm &> /dev/null; then
+        echo "npm not found: Pi extension dependencies were not installed"
+        return 1
+    fi
+    (cd "$DOTFILES/shared/pi" && npm install --omit=dev --legacy-peer-deps --silent)
 }
 
 install_dotfiles() {

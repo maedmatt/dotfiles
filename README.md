@@ -5,10 +5,10 @@ git clone https://github.com/maedmatt/dotfiles.git ~/dotfiles && cd ~/dotfiles
 
 ./install.sh            # symlink dotfiles
 ./install.sh --apps     # install tools
-./install.sh --claude   # symlink claude code config
-./install.sh --codex    # symlink codex config
-./install.sh --opencode # symlink opencode config
-./install.sh --pi       # symlink pi config, extensions, theme, rules, and skills
+./install.sh --claude   # symlink Claude Code config
+./install.sh --codex    # symlink Codex rules, prompts, skills, and optional local config
+./install.sh --opencode # symlink OpenCode config
+./install.sh --pi       # symlink Pi config, extensions, theme, rules, and skills
 ./install.sh --all      # everything
 ```
 
@@ -21,7 +21,7 @@ shared/
 ├── yazi/           # yazi file manager
 ├── herdr/          # herdr config
 ├── claude/         # claude code (rules, commands)
-├── codex/          # openai codex (AGENT.md, prompts)
+├── codex/          # openai codex (AGENTS.md, prompts, optional ignored config.toml)
 ├── opencode/       # opencode (config, commands, themes)
 ├── pi/             # pi settings, extensions, and themes
 └── skills/         # shared skills for all AI agents
