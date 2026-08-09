@@ -19,7 +19,8 @@ vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes:1"
-vim.opt.cursorline = false
+vim.opt.cursorline = true
+vim.opt.scrolloff = 8
 vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.breakindent = true
@@ -29,6 +30,16 @@ vim.opt.ruler = true
 vim.opt.pumheight = 10
 vim.opt.fillchars = { eob = " " }
 vim.opt.cmdheight = 1
+
+-- Block cursor in normal mode, thin bar in insert
+vim.opt.guicursor = {
+  "n-v-c:block",
+  "i-ci-ve:ver25",
+  "r-cr:hor20",
+  "o:hor50",
+  "a:blinkwait700-blinkoff400-blinkon250",
+  "sm:block-blinkwait175-blinkoff150-blinkon175",
+}
 
 -- Search
 vim.opt.hlsearch = true
@@ -64,7 +75,7 @@ vim.filetype.add({
 })
 
 -- ============================================================================
--- Plugins
+-- Plugins (specs live in lua/plugins/)
 -- ============================================================================
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -76,276 +87,8 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local plugins = {
-  -- Mason (tool installer)
-  { "mason-org/mason.nvim", lazy = false, config = true },
-  { "mason-org/mason-lspconfig.nvim", lazy = false, dependencies = { "neovim/nvim-lspconfig" } },
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    lazy = false,
-    config = function()
-      require("mason-tool-installer").setup({
-        ensure_installed = { "basedpyright", "ruff" },
-      })
-    end,
-  },
-
-  -- LSP
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      local lspconfig = require("lspconfig")
-
-      -- Server-specific settings
-      require("mason-lspconfig").setup({
-        handlers = {
-          function(server_name)
-            lspconfig[server_name].setup({})
-          end,
-          ["basedpyright"] = function()
-            lspconfig.basedpyright.setup({
-              settings = {
-                basedpyright = { typeCheckingMode = "standard" },
-              },
-            })
-          end,
-          ["ruff"] = function()
-            lspconfig.ruff.setup({})
-          end,
-        },
-      })
-
-      -- Keymaps on attach
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
-        callback = function(args)
-          local bufnr = args.buf
-          local function map(mode, lhs, rhs, desc)
-            vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true })
-          end
-
-          map("n", "K", vim.lsp.buf.hover, "Hover")
-          map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
-          map("n", "gd", vim.lsp.buf.definition, "Definition")
-          map("n", "gi", vim.lsp.buf.implementation, "Implementation")
-          map("n", "gr", vim.lsp.buf.references, "References")
-          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
-          map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-          map("n", "[d", function() vim.diagnostic.goto_prev() vim.cmd("normal! zz") end, "Prev Diagnostic")
-          map("n", "]d", function() vim.diagnostic.goto_next() vim.cmd("normal! zz") end, "Next Diagnostic")
-          map("n", "<leader>lf", function()
-            vim.lsp.buf.format({ async = true })
-          end, "Format")
-        end,
-      })
-
-      vim.diagnostic.config({
-        virtual_text = true,
-        underline = true,
-      })
-    end,
-  },
-
-  -- Completion
-  { "L3MON4D3/LuaSnip" },
-  {
-    "saghen/blink.cmp",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    version = "*",
-    config = function()
-      require("blink.cmp").setup({
-        snippets = { preset = "luasnip" },
-        completion = {
-          documentation = { auto_show = true },
-        },
-      })
-    end,
-  },
-
-  -- Treesitter
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    lazy = false,
-    config = function()
-      require("nvim-treesitter").setup({
-        ensure_installed = {
-          "bash", "c", "html", "javascript", "json", "latex", "lua",
-          "markdown", "markdown_inline", "python", "typescript", "vim", "yaml",
-        },
-      })
-    end,
-  },
-
-  -- Markdown rendering
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown" },
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-    opts = {},
-  },
-
-  -- Inline images in markdown
-  {
-    "3rd/image.nvim",
-    ft = { "markdown" },
-    build = false,
-    opts = {
-      processor = "magick_cli",
-      integrations = {
-        markdown = {
-          enabled = true,
-          only_render_image_at_cursor = true,
-          filetypes = { "markdown" },
-        },
-      },
-      max_height_window_percentage = 40,
-    },
-  },
-
-  -- Mini.nvim
-  {
-    "echasnovski/mini.nvim",
-    config = function()
-      require("mini.ai").setup({ n_lines = 500 })
-      require("mini.surround").setup()
-      require("mini.pairs").setup()
-
-      local statusline = require("mini.statusline")
-      statusline.section_filename = function() return "%f" end
-      statusline.setup({
-        use_icons = true,
-        set_vim_settings = false,
-      })
-    end,
-  },
-
-  -- Bufferline (tabs)
-  {
-    "akinsho/bufferline.nvim",
-    version = "*",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("bufferline").setup({
-        options = {
-          mode = "buffers",
-          separator_style = "thin",
-          always_show_bufferline = true,
-          sort_by = "insert_after_current",
-          show_buffer_close_icons = false,
-          show_close_icon = false,
-          offsets = {
-            { filetype = "NvimTree", text = "Explorer", highlight = "Directory", padding = 1 },
-          },
-        },
-      })
-    end,
-  },
-
-  -- FZF (Fuzzy Finder)
-  {
-    "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("fzf-lua").setup({
-        fzf_opts = {
-          ["--layout"] = "default",
-          ["--info"] = "inline-right",
-        },
-        files = {
-          cwd_prompt = false,
-          previewer = "bat",
-        },
-        grep = {
-          previewer = "bat",
-        },
-      })
-
-      local fzf = require("fzf-lua")
-      vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
-      vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "Live grep" })
-      vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Buffers" })
-      vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Help tags" })
-    end,
-  },
-
-  -- Git
-  {
-    "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("gitsigns").setup({
-        on_attach = function(bufnr)
-          local gs = require("gitsigns")
-          local function map(mode, l, r, desc)
-            vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
-          end
-          map("n", "]c", function() gs.next_hunk() vim.cmd("normal! zz") end, "Next hunk")
-          map("n", "[c", function() gs.prev_hunk() vim.cmd("normal! zz") end, "Prev hunk")
-          map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
-          map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
-          map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
-          map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
-        end,
-      })
-    end,
-  },
-
-  -- File explorer
-  {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      local api = require("nvim-tree.api")
-
-      local function on_attach(bufnr)
-        local function opts(desc)
-          return { buffer = bufnr, desc = desc, noremap = true, silent = true, nowait = true }
-        end
-        api.config.mappings.default_on_attach(bufnr)
-        vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
-        vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close directory"))
-      end
-
-      require("nvim-tree").setup({
-        on_attach = on_attach,
-        sync_root_with_cwd = true,
-        update_focused_file = { enable = true, update_root = false },
-        view = { width = 35, side = "left", preserve_window_proportions = true },
-        renderer = { highlight_opened_files = "all" },
-        git = { enable = true },
-        filesystem_watchers = { enable = true },
-        actions = { open_file = { quit_on_open = false, resize_window = true } },
-      })
-
-      vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" })
-    end,
-  },
-
-  -- LaTeX
-  {
-    "lervag/vimtex",
-    ft = { "tex" },
-    config = function()
-      vim.g.vimtex_view_method = "zathura"
-      vim.g.vimtex_compiler_method = "latexmk"
-    end,
-  },
-
-  -- Colorscheme
-  {
-    "nyoom-engineering/oxocarbon.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd("colorscheme oxocarbon")
-    end,
-  },
-}
-
-require("lazy").setup(plugins, {
-  install = { missing = true, colorscheme = { "oxocarbon" } },
+require("lazy").setup({ { import = "plugins" } }, {
+  install = { missing = true, colorscheme = { "catppuccin-macchiato" } },
   checker = { enabled = true, notify = false },
   change_detection = { enabled = true, notify = false },
   performance = {
@@ -381,11 +124,15 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 
--- UI toggles
-map("n", "<leader>uw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle wrap" })
-map("n", "<leader>ud", function()
-  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-end, { desc = "Toggle diagnostics" })
+-- Yank file paths (shell-quote when path has spaces)
+local function yank_path(p)
+  if p:find(" ") then p = vim.fn.shellescape(p) end
+  vim.fn.setreg("+", p)
+  vim.notify("Copied: " .. p)
+end
+map("n", "<leader>yp", function() yank_path(vim.fn.expand("%:p")) end, { desc = "Yank absolute path" })
+map("n", "<leader>yr", function() yank_path(vim.fn.fnamemodify(vim.fn.expand("%"), ":.")) end, { desc = "Yank relative path" })
+map("n", "<leader>yn", function() yank_path(vim.fn.expand("%:t")) end, { desc = "Yank filename" })
 
 -- Edit
 map("v", "J", ":m '>+1<CR>gv=gv")
@@ -434,11 +181,31 @@ api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Help opens as a vertical split rather than a squashed horizontal one
+api.nvim_create_autocmd("FileType", {
+  group = api.nvim_create_augroup("vertical_help", { clear = true }),
+  pattern = "help",
+  callback = function()
+    vim.bo.bufhidden = "unload"
+    vim.cmd.wincmd("L")
+    vim.cmd.wincmd("=")
+  end,
+})
+
 -- Auto-close terminal on successful exit
 api.nvim_create_autocmd("TermClose", {
   callback = function()
     if vim.v.event.status == 0 then
       vim.cmd("bdelete!")
     end
+  end,
+})
+
+-- Spell check for prose
+api.nvim_create_autocmd("FileType", {
+  pattern = { "tex", "markdown", "text" },
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us,it,fr"
   end,
 })
