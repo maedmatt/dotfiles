@@ -1,4 +1,6 @@
 .DS_Store
 .claude/
+shared/codex/config.toml
+shared/skills/thesis-note/
 shared/yazi/flavors/
 shared/skills/.system/
