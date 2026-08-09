@@ -30,6 +30,17 @@
     "type": "command",
     "command": "bunx -y ccstatusline@latest"
   },
+  "enabledPlugins": {
+    "plannotator@plannotator": true
+  },
+  "extraKnownMarketplaces": {
+    "plannotator": {
+      "source": {
+        "source": "github",
+        "repo": "backnotprop/plannotator"
+      }
+    }
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "awaySummaryEnabled": false,

@@ -1,0 +1,21 @@
+{
+  "displayName": "matteo",
+  "diffOptions": {
+    "diffStyle": "split",
+    "defaultDiffType": "uncommitted",
+    "hideWhitespace": true,
+    "diffIndicators": "bars",
+    "overflow": "wrap",
+    "lineBgIntensity": "subtle",
+    "lineDiffType": "word-alt"
+  },
+  "prompts": {
+    "annotate": {
+      "messageFeedback": "# Follow-up on the Previous Response\n\n{{feedback}}\n\nAddress each annotation in order, using its number. Explain unclear points and missing reasoning, correct the earlier answer when needed, and distinguish facts from assumptions. Inspect project sources, and search online when local or current evidence is insufficient.\n\nInclude only the context needed to understand the answer. Do not repeat unchallenged parts of the previous response.\n\nOnly edit files or start work when explicitly requested. If missing information or preferences matter, do not guess. When useful, add a short numbered `Questions for You` section that the user can answer by annotating your response. Omit the section when no questions are needed. Continue with independent items, but wait before acting on blocked ones.",
+      "fileFeedback": "# Follow-up on {{fileHeader}} Annotations\n\n{{fileHeader}}: {{filePath}}\n\n{{feedback}}\n\nAddress each annotation in order. Answer questions, assess suggestions, and apply clear change requests with targeted edits. Do not alter unrelated content or structure.\n\nInspect the artifact and relevant project sources, and search online when needed. If missing information or preferences matter, do not guess. When useful, add a short numbered `Questions for You` section that the user can answer by annotating your response. Omit the section when no questions are needed. Continue with independent items, but wait before making blocked changes.\n\nAfter editing, briefly summarize what changed and how you checked it. If no edit was requested, return only the explanation or assessment."
+    },
+    "review": {
+      "denied": "The comments above are review input. They may be questions, observations, suggestions, or explicit change requests. Do not treat every comment as a bug report, and check factual claims against the code.\n\nHandle each comment in review order:\n\n- For a question, inspect the relevant code and answer with concise evidence.\n- For an observation or suggestion, assess it and propose the simplest option.\n- For a clear and valid change request, make only the requested change.\n- When local evidence is insufficient or the question concerns current practices, look online for relevant sources.\n\nWhen a request depends on missing requirements, preferences, or a meaningful design choice, do not guess. Ask short numbered questions in a `Questions for You` section so the user can answer by annotating your response. Continue with independent comments, but wait before making blocked changes.\n\nDo not perform a separate review or introduce unrelated cleanup. After making changes, run the relevant checks and briefly summarize what changed and how you validated it. If no change was requested, return only the assessment."
+    }
+  }
+}
