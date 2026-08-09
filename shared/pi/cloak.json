@@ -1,0 +1,118 @@
+{
+  "enabled": true,
+  "cloakCharacter": "*",
+  "cloakLength": null,
+  "tryAllPatterns": true,
+  "patterns": [
+    {
+      "filePattern": [
+        "**/*.env*",
+        "**/*.vars*",
+        "**/.envrc"
+      ],
+      "cloakPattern": "(=).+",
+      "replace": "$1"
+    },
+    {
+      "filePattern": [
+        "**/*.toml",
+        "**/*.ini",
+        "**/*.cfg",
+        "**/.pypirc",
+        "**/credentials"
+      ],
+      "cloakPattern": [
+        {
+          "pattern": "((?:api_?key|token|secret|password|passwd|access_?key|client_secret|aws_access_key_id|aws_secret_access_key)\\s*=\\s*).+",
+          "flags": "i",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/*.yaml",
+        "**/*.yml"
+      ],
+      "cloakPattern": [
+        {
+          "pattern": "((?:api_?key|apikey|token|secret|password|passwd|access_?key|client_secret|auth)\\s*:\\s*).+",
+          "flags": "i",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/*.py",
+        "**/*.ipynb"
+      ],
+      "cloakPattern": [
+        {
+          "pattern": "((?:api_?key|apikey|token|secret|password|passwd|access_?key|client_secret)\\s*=\\s*[\\\"'])[^\\\"']+",
+          "flags": "i",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/*.opencode.json",
+        "**/opencode.json"
+      ],
+      "cloakPattern": "(\\\"apiKey\\\"\\s*:\\s*\\\")[^\\\"]+",
+      "replace": "$1"
+    },
+    {
+      "filePattern": [
+        "~/.pi/agent/auth.json",
+        "**/.pi/agent/auth.json",
+        "**/auth.json"
+      ],
+      "cloakPattern": [
+        {
+          "pattern": "(\\\"(?:token|access|refresh|accessToken|refreshToken|apiKey|secret|password|clientSecret|idToken|sessionToken|authorization)\\\"\\s*:\\s*\\\")[^\\\"]+",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/.netrc",
+        "**/_netrc"
+      ],
+      "cloakPattern": [
+        {
+          "pattern": "((?:password|account)\\s+)\\S+",
+          "flags": "i",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/huggingface/token",
+        "**/huggingface/stored_tokens",
+        "**/wandb/settings"
+      ],
+      "cloakPattern": [
+        "hf_[A-Za-z0-9]+",
+        {
+          "pattern": "((?:api_?key|token)\\s*=\\s*).+",
+          "flags": "i",
+          "replace": "$1"
+        }
+      ]
+    },
+    {
+      "filePattern": [
+        "**/*.pem",
+        "**/*.key",
+        "**/id_rsa",
+        "**/id_ecdsa",
+        "**/id_ed25519"
+      ],
+      "cloakPattern": "[A-Za-z0-9+/=]{20,}"
+    }
+  ]
+}
