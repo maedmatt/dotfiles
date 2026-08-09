@@ -9,7 +9,7 @@ onboarding = false
 # Built-in themes: catppuccin, terminal, tokyo-night, dracula, nord,
 #                  gruvbox, one-dark, solarized, kanagawa, rose-pine,
 #                  vesper
-name = "gruvbox"
+name = "catppuccin"
 
 # Follow host terminal light/dark appearance and switch Herdr UI themes.
 # Existing manual behavior is unchanged unless this is true.
@@ -91,10 +91,14 @@ rename_tab = "prefix+,"
 # close_tab = "prefix+shift+x"
 # rename_pane = "prefix+shift+p"
 # edit_scrollback = "prefix+e"
-# focus_pane_left = "prefix+h"
-# focus_pane_down = "prefix+j"
-# focus_pane_up = "prefix+k"
-# focus_pane_right = "prefix+l"
+
+# tmux: christoomey/vim-tmux-navigator — move between panes with ctrl+h/j/k/l,
+# no prefix needed. (tmux also had prefix h/j/k/l via bind-key select-pane.)
+focus_pane_left = "ctrl+h"
+# focus_pane_down = "ctrl+j"
+# focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
 # cycle_pane_next = "prefix+tab"
 # cycle_pane_previous = "prefix+shift+tab"
 # last_pane = ""          # optional, unset by default; bind e.g. "prefix+tab" for global back-and-forth
@@ -146,6 +150,7 @@ command = "herdr pane split --current --direction right --ratio 0.625 --focus"
 [ui]
 # Sidebar width (auto-scaled based on workspace names, this sets the default)
 # sidebar_width = 26
+sidebar_width = 32
 
 # Minimum sidebar width when expanded (columns)
 # sidebar_min_width = 18
@@ -164,7 +169,7 @@ command = "herdr pane split --current --direction right --ratio 0.625 --focus"
 
 # Optional modifier that forwards right-click hold/drag gestures to pane apps instead of opening Herdr's pane menu.
 # Empty/off disables this. Shift is intentionally unsupported because terminals commonly reserve Shift+mouse.
-# right_click_passthrough_modifier = ""
+right_click_passthrough_modifier = "ctrl"
 
 # Force a full redraw when the outer terminal regains focus.
 # Set false to reduce visible flashing when switching back to Herdr.

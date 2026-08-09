@@ -33,9 +33,8 @@ alias ll='ls -lah'
 alias grep='grep --color=auto'
 alias lg="lazygit"
 
-# Path (before editor check so nvim is found)
-export PATH="$HOME/.local/bin:$PATH"
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# Path (before editor check so nvim and agent CLIs are found)
+export PATH="$HOME/.local/bin:$HOME/.local/share/pi-node/current/bin:$PATH"
 
 # Editor
 if command -v nvim &>/dev/null; then
@@ -59,16 +58,3 @@ fi
 # fzf
 export PATH="$HOME/.fzf/bin:$PATH"
 command -v fzf &>/dev/null && eval "$(fzf --bash)"
-
-# Yazi wrapper - cd to last directory on exit
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
-}
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
