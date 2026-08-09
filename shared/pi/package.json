@@ -1,0 +1,21 @@
+{
+  "name": "pi-config",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "extensions/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run check --workspace=pi-save-md-extension && npm run check --workspace=pi-web-tools-extension && npm run typecheck --workspace=pi-skill-toggle && npm run test --workspace=pi-skill-toggle",
+    "test": "npm run test --workspace=pi-save-md-extension && npm run test --workspace=pi-web-tools-extension && npm run test --workspace=pi-skill-toggle"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "^0.84.1",
+    "@earendil-works/pi-coding-agent": "^0.84.1",
+    "@earendil-works/pi-tui": "^0.84.1",
+    "@types/node": "^24.5.2",
+    "typebox": "^1.3.11",
+    "typescript": "^5.9.2"
+  }
+}
