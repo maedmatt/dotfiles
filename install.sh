@@ -63,11 +63,13 @@ install_apps() {
             NVIM_ARCH="x86_64"
             LG_ARCH="x86_64"
             TS_ARCH="x64"
+            YAZI_ARCH="x86_64"
         elif [ "$ARCH" = "aarch64" ]; then
             DEB_ARCH="arm64"
             NVIM_ARCH="arm64"
             LG_ARCH="arm64"
             TS_ARCH="arm64"
+            YAZI_ARCH="aarch64"
         else
             echo "Unsupported architecture: $ARCH"
             exit 1
@@ -97,15 +99,27 @@ install_apps() {
         # Base dependencies
         sudo apt update
         sudo apt install -y \
+            bash-completion \
+            bat \
+            bc \
+            btop \
+            build-essential \
             ca-certificates \
             curl \
             git \
-            tar \
             gzip \
-            unzip \
-            xz-utils \
+            jq \
             ripgrep \
-            bash-completion
+            tar \
+            tmux \
+            unzip \
+            xz-utils
+
+        # Ubuntu installs bat as batcat.
+        if ! command -v bat &> /dev/null && command -v batcat &> /dev/null; then
+            mkdir -p "$HOME/.local/bin"
+            ln -sfn "$(command -v batcat)" "$HOME/.local/bin/bat"
+        fi
 
         # Remove conflicting Ubuntu fd package
         sudo apt remove -y fd-find 2>/dev/null || true
@@ -133,12 +147,42 @@ install_apps() {
         fi
 
         # tree-sitter CLI, required by nvim-treesitter's main branch
-        if ! command -v tree-sitter &> /dev/null; then
+        tree_sitter_works() {
+            local version
+
+            command -v tree-sitter &> /dev/null || return 1
+            version=$(tree-sitter --version 2>/dev/null | awk 'NR == 1 { print $2 }') || return 1
+            [ -n "$version" ] && dpkg --compare-versions "$version" ge 0.26.1
+        }
+
+        if ! tree_sitter_works; then
             V=$(gh_latest tree-sitter/tree-sitter)
             download /tmp/tree-sitter.gz \
                 "https://github.com/tree-sitter/tree-sitter/releases/download/${V}/tree-sitter-linux-${TS_ARCH}.gz"
             gzip -dc /tmp/tree-sitter.gz > /tmp/tree-sitter
-            sudo install -m 0755 /tmp/tree-sitter /usr/local/bin/tree-sitter
+            chmod 0755 /tmp/tree-sitter
+
+            if /tmp/tree-sitter --version &> /dev/null; then
+                sudo install -m 0755 /tmp/tree-sitter /usr/local/bin/tree-sitter
+            else
+                # Current release binaries require glibc 2.39. Build locally on
+                # older systems such as Ubuntu 22.04 instead of replacing glibc.
+                echo "Prebuilt tree-sitter is incompatible; building ${V} locally..."
+                sudo apt install -y clang libclang-dev libssl-dev pkg-config
+
+                if [ ! -x "$HOME/.cargo/bin/rustup" ]; then
+                    download /tmp/rustup-init.sh https://sh.rustup.rs
+                    sh /tmp/rustup-init.sh -y --profile minimal --no-modify-path
+                    rm -f /tmp/rustup-init.sh
+                fi
+
+                "$HOME/.cargo/bin/rustup" toolchain install stable --profile minimal
+                "$HOME/.cargo/bin/cargo" +stable install tree-sitter-cli \
+                    --version "${V#v}" --locked
+                sudo install -m 0755 "$HOME/.cargo/bin/tree-sitter" \
+                    /usr/local/bin/tree-sitter
+            fi
+
             rm -f /tmp/tree-sitter.gz /tmp/tree-sitter
         fi
 
@@ -154,6 +198,15 @@ install_apps() {
             sudo install -m 0755 "$TMP/lazygit" /usr/local/bin/lazygit
 
             rm -rf "$TMP"
+        fi
+
+        # yazi
+        if ! command -v yazi &> /dev/null; then
+            V=$(gh_latest sxyazi/yazi)
+            download /tmp/yazi.deb \
+                "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${YAZI_ARCH}-unknown-linux-musl.deb"
+            sudo apt install -y /tmp/yazi.deb
+            rm -f /tmp/yazi.deb
         fi
 
         # fzf

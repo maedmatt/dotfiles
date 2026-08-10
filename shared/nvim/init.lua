@@ -7,6 +7,8 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Editor behavior
 vim.opt.mouse = "a"
+-- Force the local terminal clipboard through SSH, tmux, and containers.
+vim.g.clipboard = "osc52"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"

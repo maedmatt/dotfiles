@@ -12,10 +12,25 @@ git clone https://github.com/maedmatt/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ./install.sh --all      # everything
 ```
 
+## Linux
+
+The app installer supports Debian/Ubuntu on `x86_64` and `aarch64`. It uses
+upstream binaries for current systems. When the Tree-sitter binary requires a
+newer glibc, as on Ubuntu 22.04, it installs Rust and builds the CLI locally.
+
+Pi requires Node.js 22.19 or newer. On a new machine, install Pi and its managed
+Node.js before using `--pi` or `--all`:
+
+```bash
+curl -fsSL https://pi.dev/install.sh | sh
+export PATH="$HOME/.local/share/pi-node/current/bin:$PATH"
+```
+
 ## Structure
 
 ```
 shared/
+├── ghostty/        # cross-platform terminal settings
 ├── nvim/           # neovim config
 ├── tmux.conf       # tmux config
 ├── yazi/           # yazi file manager
