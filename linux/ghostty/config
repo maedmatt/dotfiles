@@ -1,37 +1,8 @@
-# ~/.config/ghostty/config
+# Linux-specific Ghostty configuration
+config-file = ~/dotfiles/shared/ghostty/config
 
-# Font
-font-family = "JetBrainsMono Nerd Font"
-font-style = Regular
-font-size = 11
-adjust-cell-height = 35%
-
-# Theme
-theme = Oxocarbon
-
-# Window
-window-decoration = true
-window-padding-x = 14
-window-padding-y = 14
-window-padding-balance = true
-window-save-state = always
-confirm-close-surface = false
-resize-overlay = never
 gtk-toolbar-style = flat
 
-# Cursor
-cursor-style = block
-cursor-style-blink = false
-
-# Shell integration (all options must be passed together)
-shell-integration-features = no-cursor,ssh-terminfo,ssh-env
-
-# Clipboard
-clipboard-read = allow
-clipboard-write = allow
-
-# Keybindings
-keybind = shift+enter=text:\x1b\r
 keybind = ctrl+enter=text:\x1b[13;5u
 keybind = shift+insert=paste_from_clipboard
 keybind = control+insert=copy_to_clipboard

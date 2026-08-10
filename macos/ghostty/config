@@ -1,23 +1,4 @@
-# ~/.config/ghostty/config
-shell-integration-features = no-cursor,ssh-terminfo,ssh-env
+# macOS-specific Ghostty configuration
+config-file = ~/dotfiles/shared/ghostty/config
 
-cursor-style = block
-cursor-style-blink = true
-font-family = Ioskley Mono 
-font-size = 12
-adjust-cell-height = 35%
-window-decoration = true
-title = ghostty
-# macos-titlebar-style = hidden
-window-padding-x = 8
-window-padding-y = 8
 macos-non-native-fullscreen = true
-theme = Catppuccin Macchiato
-mouse-hide-while-typing = true
-mouse-scroll-multiplier = 2
-window-padding-balance = true
-window-save-state = always
-clipboard-read = allow
-clipboard-write = allow
-
-keybind = shift+enter=text:\x1b\r

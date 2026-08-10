@@ -1,0 +1,30 @@
+# Shared Ghostty configuration
+
+# Terminal
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
+theme = Catppuccin Macchiato
+
+# Font
+font-size = 12
+adjust-cell-height = 35%
+
+# Window
+window-decoration = true
+title = ghostty
+window-padding-x = 8
+window-padding-y = 8
+window-padding-balance = true
+window-save-state = always
+
+# Cursor and mouse
+cursor-style = block
+cursor-style-blink = true
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+# Keybindings
+keybind = shift+enter=text:\x1b\r
