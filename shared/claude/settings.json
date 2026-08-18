@@ -1,5 +1,6 @@
 {
   "env": {},
+  "cleanupPeriodDays": 3650,
   "attribution": {
     "commit": "",
     "pr": ""
