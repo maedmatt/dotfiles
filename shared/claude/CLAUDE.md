@@ -27,6 +27,8 @@ Do not assume a project domain until you inspect the repo. Use repo-local files 
 
 ## Tool Usage
 
+- Never compile LaTeX files unless the user explicitly asks you to. Assume their editor tooling may compile automatically after edits.
+
 - Delegate independent subtasks to subagents and keep working while they run. Intervene if a subagent goes off track or is missing relevant context.
 
 - For git commits, apply the `commits` skill.
