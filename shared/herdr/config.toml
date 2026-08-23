@@ -127,7 +127,7 @@ swap_pane_right = "prefix+}"
 key = "prefix+shift+c"
 type = "shell"
 description = "Split right for agent"
-command = "herdr pane split --current --direction right --ratio 0.625 --focus"
+command = "\"$HERDR_BIN_PATH\" pane split \"$HERDR_ACTIVE_PANE_ID\" --direction right --ratio 0.625 --focus"
 
 # Custom commands use the same binding syntax.
 # type = "shell" runs detached in the background.
