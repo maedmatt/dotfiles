@@ -12,6 +12,12 @@ git clone https://github.com/maedmatt/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ./install.sh --all      # everything
 ```
 
+`--apps` installs both tmux and Herdr. Herdr uses its own terminal runtime, so
+tmux remains available as an independent fallback rather than a dependency.
+It also installs the shared Neovim toolchain: `uv`, CMake/CTest, `clangd`,
+`clang-format`, and the Tree-sitter CLI.
+After connecting over SSH, run `herdr` to start or attach to the multiplexer.
+
 ## Linux
 
 The app installer supports Debian/Ubuntu on `x86_64` and `aarch64`. It uses

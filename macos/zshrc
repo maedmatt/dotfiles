@@ -58,7 +58,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # pnpm
-export PNPM_HOME="/Users/kai/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -68,4 +68,4 @@ esac
 # OpenClaw Completion
 autoload -Uz compinit
 compinit
-source "/Users/kai/.openclaw/completions/openclaw.zsh"
+[ -r "$HOME/.openclaw/completions/openclaw.zsh" ] && source "$HOME/.openclaw/completions/openclaw.zsh"

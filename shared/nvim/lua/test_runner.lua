@@ -60,7 +60,6 @@ local commands = {
   python = "uv run pytest",
   cmake = table.concat({
     "cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-    "cmake -E copy_if_different build/compile_commands.json compile_commands.json",
     "cmake --build build",
     "ctest --test-dir build --output-on-failure",
   }, " && "),

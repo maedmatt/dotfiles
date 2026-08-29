@@ -1,5 +1,7 @@
 -- Formatting on save through conform, with the LSP as fallback.
 -- :ConformDisable  turns it off globally, :ConformDisable! for this buffer only.
+local manual_format_only = { c = true, cpp = true, objc = true, objcpp = true, cuda = true }
+
 vim.api.nvim_create_user_command("ConformDisable", function(args)
   if args.bang then
     vim.b.disable_autoformat = true
@@ -29,7 +31,11 @@ return {
       notify_on_error = false,
       default_format_opts = { timeout_ms = 1000, lsp_format = "fallback" },
       format_after_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+        if
+          vim.g.disable_autoformat
+          or vim.b[bufnr].disable_autoformat
+          or manual_format_only[vim.bo[bufnr].filetype]
+        then
           return
         end
         return { timeout_ms = 1000, lsp_format = "fallback" }
