@@ -36,6 +36,8 @@ return {
       end,
       formatters_by_ft = {
         python = { "ruff_fix", "ruff_format" },
+        c = { "clang-format" },
+        cpp = { "clang-format" },
         lua = { "stylua" },
         json = { "jq" },
         sh = { "shfmt" },

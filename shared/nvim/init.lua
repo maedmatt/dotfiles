@@ -138,6 +138,9 @@ map("n", "<leader>yp", function() yank_path(vim.fn.expand("%:p")) end, { desc = 
 map("n", "<leader>yr", function() yank_path(vim.fn.fnamemodify(vim.fn.expand("%"), ":.")) end, { desc = "Yank relative path" })
 map("n", "<leader>yn", function() yank_path(vim.fn.expand("%:t")) end, { desc = "Yank filename" })
 
+-- Run the nearest Python or CMake project's tests in a terminal.
+require("test_runner").setup()
+
 -- Edit
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")

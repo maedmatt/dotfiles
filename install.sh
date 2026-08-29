@@ -53,7 +53,7 @@ install_apps() {
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
         # tree-sitter-cli: nvim-treesitter main branch builds parsers with it
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript mermaid-cli bun
+        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli clang-format imagemagick ghostscript mermaid-cli bun
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
@@ -105,6 +105,7 @@ install_apps() {
             btop \
             build-essential \
             ca-certificates \
+            clang-format \
             curl \
             git \
             gzip \

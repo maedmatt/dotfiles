@@ -13,25 +13,37 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local lspconfig = require("lspconfig")
-
+      -- Mason installs the managed servers, but activation stays explicit so
+      -- system servers such as clangd follow the same predictable path.
       require("mason-lspconfig").setup({
-        handlers = {
-          function(server_name)
-            lspconfig[server_name].setup({})
-          end,
-          ["basedpyright"] = function()
-            lspconfig.basedpyright.setup({
-              settings = {
-                basedpyright = { typeCheckingMode = "standard" },
-              },
-            })
-          end,
-          ["ruff"] = function()
-            lspconfig.ruff.setup({})
-          end,
+        automatic_enable = false,
+      })
+
+      vim.lsp.config("basedpyright", {
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "standard",
+            },
+          },
         },
       })
+
+      -- clangd comes from Xcode/Homebrew rather than Mason. Including
+      -- CMakeLists.txt lets each classroom exercise form its own LSP root.
+      vim.lsp.config("clangd", {
+        root_markers = {
+          ".clangd",
+          ".clang-tidy",
+          ".clang-format",
+          "compile_commands.json",
+          "compile_flags.txt",
+          "CMakeLists.txt",
+          ".git",
+        },
+      })
+
+      vim.lsp.enable({ "basedpyright", "ruff", "texlab", "clangd" })
 
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
