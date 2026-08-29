@@ -1,7 +1,12 @@
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import {
+  CustomEditor,
+  type ExtensionAPI,
+  type ExtensionCommandContext,
+  type ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
 
 /**
  * Load Kai's canonical programming tutor skill only when Matteo wants a lesson.
@@ -11,8 +16,8 @@ import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@e
  * Override the canonical skill path with PI_PROGRAMMING_CLASSROOM_SKILL.
  */
 const STATE_TYPE = "programming-classroom-mode";
-const STATUS_KEY = "programming-classroom";
 const SKILL_NAME = "programming-classroom-tutor";
+const MODE_LABEL = " teaching: on ";
 const DEFAULT_SKILL_PATH = join(
   homedir(),
   ".openclaw",
@@ -51,8 +56,52 @@ function requestedMode(args: string, current: boolean): boolean | "status" | und
   return undefined;
 }
 
-function updateStatus(ctx: ExtensionContext, enabled: boolean): void {
-  ctx.ui.setStatus(STATUS_KEY, enabled ? "teaching" : undefined);
+function installTeachingEditor(ctx: ExtensionContext): void {
+  if (!ctx.hasUI) return;
+
+  // Preserve an editor installed by another extension, such as the Ghostty
+  // Shift+Enter adapter, and add only the classroom presentation around it.
+  const baseFactory = ctx.ui.getEditorComponent();
+  const uiTheme = ctx.ui.theme;
+
+  ctx.ui.setEditorComponent((tui, theme, keybindings) => {
+    const editor = baseFactory?.(tui, theme, keybindings) ?? new CustomEditor(tui, theme, keybindings);
+    const teachingBorder = (text: string) => {
+      if (editor.getText().trimStart().startsWith("!")) {
+        return uiTheme.getBashModeBorderColor()(text);
+      }
+      return uiTheme.fg("warning", text);
+    };
+
+    // Pi normally updates the border when thinking/model state changes. Teaching
+    // mode keeps its own color, while retaining the standard bash-mode color.
+    Object.defineProperty(editor, "borderColor", {
+      get: () => teachingBorder,
+      set: () => {},
+      configurable: true,
+      enumerable: true,
+    });
+
+    const renderBase = editor.render.bind(editor);
+    editor.render = (width: number) => {
+      const lines = renderBase(width);
+      if (lines.length < 2) return lines;
+
+      const topPlain = (lines[0] ?? "").replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");
+      const scrollPrefix = topPlain.match(/^(─── ↑ \d+ more )/)?.[1];
+      const prefix = scrollPrefix ?? "──";
+      const remaining = width - prefix.length - MODE_LABEL.length;
+      if (remaining < 1) return lines;
+
+      lines[0] =
+        teachingBorder(prefix) +
+        uiTheme.bold(uiTheme.fg("warning", MODE_LABEL)) +
+        teachingBorder("─".repeat(remaining));
+      return lines;
+    };
+
+    return editor;
+  });
 }
 
 async function changeMode(
@@ -85,7 +134,6 @@ async function changeMode(
 
   setCurrent(requested);
   pi.appendEntry(STATE_TYPE, { enabled: requested } satisfies TeachingModeState);
-  updateStatus(ctx, requested);
   ctx.ui.notify(
     requested
       ? "Programming teaching mode enabled. Reloading the tutor skill."
@@ -105,12 +153,12 @@ export default function programmingClassroom(pi: ExtensionAPI) {
   });
 
   pi.on("session_start", (_event, ctx) => {
-    enabled = Boolean(pi.getFlag("teach")) || (savedMode(ctx) ?? false);
+    enabled = savedMode(ctx) ?? Boolean(pi.getFlag("teach"));
     if (enabled && !existsSync(skillPath())) {
       enabled = false;
       ctx.ui.notify(`Programming teaching mode could not find ${skillPath()}`, "error");
     }
-    updateStatus(ctx, enabled);
+    if (enabled) installTeachingEditor(ctx);
   });
 
   pi.on("resources_discover", () => {
