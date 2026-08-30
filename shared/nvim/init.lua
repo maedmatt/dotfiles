@@ -7,8 +7,9 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Editor behavior
 vim.opt.mouse = "a"
--- Use OSC 52 for remote sessions; prefer the native provider locally.
-if vim.env.SSH_CONNECTION then
+-- Use OSC 52 for SSH and Herdr panes; prefer the native provider locally.
+-- Herdr's long-lived server may outlive the original SSH environment.
+if vim.env.SSH_CONNECTION or vim.env.HERDR_ENV == "1" then
   vim.g.clipboard = "osc52"
 end
 vim.opt.clipboard = "unnamedplus"
@@ -137,6 +138,9 @@ end
 map("n", "<leader>yp", function() yank_path(vim.fn.expand("%:p")) end, { desc = "Yank absolute path" })
 map("n", "<leader>yr", function() yank_path(vim.fn.fnamemodify(vim.fn.expand("%"), ":.")) end, { desc = "Yank relative path" })
 map("n", "<leader>yn", function() yank_path(vim.fn.expand("%:t")) end, { desc = "Yank filename" })
+
+-- Run the nearest Python or CMake project's tests in a terminal.
+require("test_runner").setup()
 
 -- Edit
 map("v", "J", ":m '>+1<CR>gv=gv")

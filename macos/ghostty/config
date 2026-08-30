@@ -1,4 +1,9 @@
 # macOS-specific Ghostty configuration
 config-file = ~/dotfiles/shared/ghostty/config
 
+cursor-style-blink = false
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
+font-family = Ioskeley Mono
+font-size = 14
+window-decoration = true
 macos-non-native-fullscreen = true

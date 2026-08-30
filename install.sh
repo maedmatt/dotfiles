@@ -53,7 +53,7 @@ install_apps() {
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
         # tree-sitter-cli: nvim-treesitter main branch builds parsers with it
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript mermaid-cli bun
+        brew install neovim uv cmake yazi tmux herdr lazygit btop fzf fd ripgrep tree-sitter-cli clang-format imagemagick ghostscript mermaid-cli bun
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
@@ -105,6 +105,9 @@ install_apps() {
             btop \
             build-essential \
             ca-certificates \
+            clangd \
+            clang-format \
+            cmake \
             curl \
             git \
             gzip \
@@ -134,8 +137,17 @@ install_apps() {
             rm -f /tmp/fd.deb
         fi
 
-        # neovim
-        if ! command -v nvim &> /dev/null; then
+        # Keep every workstation on the shared, tested Neovim 0.12 baseline.
+        # Replace older distro/manual installs too.
+        nvim_works() {
+            local version
+
+            command -v nvim &> /dev/null || return 1
+            version=$(nvim --version 2>/dev/null | awk 'NR == 1 { sub(/^v/, "", $2); print $2 }') || return 1
+            [ -n "$version" ] && dpkg --compare-versions "$version" ge 0.12.0
+        }
+
+        if ! nvim_works; then
             download /tmp/nvim.tar.gz \
                 "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
 
@@ -186,6 +198,12 @@ install_apps() {
             rm -f /tmp/tree-sitter.gz /tmp/tree-sitter
         fi
 
+        # uv drives every Python classroom project and installs into
+        # ~/.local/bin, which linux/bashrc already adds to PATH.
+        if ! command -v uv &> /dev/null; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+        fi
+
         # lazygit
         if ! command -v lazygit &> /dev/null; then
             V=$(gh_latest jesseduffield/lazygit)
@@ -223,6 +241,12 @@ install_apps() {
             --no-bash \
             --no-zsh \
             --no-fish
+
+        # Herdr publishes a self-updating binary for Linux. It is independent
+        # of tmux; tmux remains installed as a separate fallback multiplexer.
+        if ! command -v herdr &> /dev/null; then
+            curl -fsSL https://herdr.dev/install.sh | sh
+        fi
 
     fi
 }
