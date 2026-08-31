@@ -1,6 +1,6 @@
 {
-  "env": {},
   "cleanupPeriodDays": 3650,
+  "env": {},
   "attribution": {
     "commit": "",
     "pr": ""
@@ -50,5 +50,6 @@
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
+  "remoteControlAtStartup": false,
   "skipAutoPermissionPrompt": true
 }
