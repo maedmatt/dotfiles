@@ -1,0 +1,119 @@
+{
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Right Option -> Cmd+Ctrl+Alt (AeroSpace leader; left Option free for typing)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "right_option",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "External keyboard -> U.S. input source",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "product_id": 268,
+                                                "vendor_id": 9610
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "any": "key_code",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "conditions": [
+                                            {
+                                                "input_sources": [
+                                                    {
+                                                        "input_source_id": "^com\\.apple\\.keylayout\\.US$"
+                                                    }
+                                                ],
+                                                "type": "input_source_unless"
+                                            }
+                                        ],
+                                        "select_input_source": {
+                                            "input_source_id": "^com\\.apple\\.keylayout\\.US$"
+                                        }
+                                    },
+                                    { "from_event": true }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Built-in keyboard -> Italian - Pro input source",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [{ "is_built_in_keyboard": true }],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "any": "key_code",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "conditions": [
+                                            {
+                                                "input_sources": [
+                                                    {
+                                                        "input_source_id": "^com\\.apple\\.keylayout\\.Italian-Pro$"
+                                                    }
+                                                ],
+                                                "type": "input_source_unless"
+                                            }
+                                        ],
+                                        "select_input_source": {
+                                            "input_source_id": "^com\\.apple\\.keylayout\\.Italian-Pro$"
+                                        }
+                                    },
+                                    { "from_event": true }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 268,
+                        "vendor_id": 9610
+                    },
+                    "ignore_vendor_events": true
+                }
+            ],
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        }
+    ]
+}
