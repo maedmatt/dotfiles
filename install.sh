@@ -300,6 +300,7 @@ install_dotfiles() {
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"
     if [[ "$PLATFORM" == "macos" ]]; then
         link "$DOTFILES/macos/sketchybar" "$HOME/.config/sketchybar"
+        link "$DOTFILES/macos/karabiner/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
     fi
 }
 
