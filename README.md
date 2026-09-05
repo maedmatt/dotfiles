@@ -40,7 +40,7 @@ shared/
 ├── opencode/       # opencode (config, commands, themes)
 ├── pi/             # pi settings, extensions, and themes
 └── skills/         # shared skills for all AI agents
-macos/              # zshrc, ghostty
+macos/              # zshrc, ghostty, Karabiner-Elements
 linux/              # bashrc, ghostty
 ```
 
