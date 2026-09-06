@@ -1,0 +1,11 @@
+modelRoles:
+  default: openai-codex/gpt-6-astra:xhigh
+  advisor: anthropic/claude-fable-5:xhigh
+theme:
+  dark: dark-gruvbox
+  light: anthracite
+symbolPreset: unicode
+colorBlindMode: true
+setupVersion: 2
+composer:
+  shape: field

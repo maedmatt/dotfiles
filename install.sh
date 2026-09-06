@@ -19,6 +19,7 @@ DO_CLAUDE=false
 DO_CODEX=false
 DO_OPENCODE=false
 DO_PI=false
+DO_OMP=false
 DO_DOTFILES=false
 
 if [[ $# -eq 0 ]]; then
@@ -32,7 +33,8 @@ for arg in "$@"; do
         --codex)    DO_CODEX=true ;;
         --opencode) DO_OPENCODE=true ;;
         --pi)       DO_PI=true ;;
-        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_PI=true; DO_DOTFILES=true ;;
+        --omp)      DO_OMP=true ;;
+        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_PI=true; DO_OMP=true; DO_DOTFILES=true ;;
     esac
 done
 
@@ -286,6 +288,14 @@ install_pi() {
     (cd "$DOTFILES/shared/pi" && npm install --omit=dev --legacy-peer-deps --silent)
 }
 
+install_omp() {
+    echo "Installing Oh My Pi config..."
+    mkdir -p "$HOME/.omp/agent"
+    link "$DOTFILES/shared/omp/config.yml" "$HOME/.omp/agent/config.yml"
+    link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.omp/agent/AGENTS.md"
+    link "$DOTFILES/shared/skills" "$HOME/.omp/agent/skills"
+}
+
 install_dotfiles() {
     echo "Installing dotfiles..."
     # Shared
@@ -309,6 +319,7 @@ if $DO_CLAUDE; then install_claude; fi
 if $DO_CODEX; then install_codex; fi
 if $DO_OPENCODE; then install_opencode; fi
 if $DO_PI; then install_pi; fi
+if $DO_OMP; then install_omp; fi
 if $DO_DOTFILES; then install_dotfiles; fi
 
 echo "Done!"
