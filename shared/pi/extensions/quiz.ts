@@ -106,11 +106,11 @@ const QuizParams = Type.Object({
 	),
 	correctAnswer: Type.Union([Type.String(), Type.Array(Type.String())], {
 		description:
-			'REQUIRED. The correct answer as the option value(s) — the `value` field of the option you intend. Single-select: a single string (e.g. "mercury"). Multi-select: an array of strings (e.g. ["belize", "niue"]); the user is only correct if their selection matches this set exactly. Always pass the value, not a position number — this is self-checking and prevents miscounting.',
+			'The correct answer as option value(s): the `value` field of the option you intend, never a position number. Single-select: one string (e.g. "mercury"). Multi-select: an array of strings (e.g. ["belize", "niue"]); the user is correct only if their selection matches this set exactly. A value that matches no option is an error.',
 	}),
 	explanation: Type.String({
 		description:
-			"REQUIRED. Explanation revealed AFTER the user answers (shown whether they got it right or wrong). Use it to reinforce why the correct answer is correct.",
+			"Explanation revealed after the user answers, right or wrong: why the correct answer is correct.",
 	}),
 	shuffle: Type.Optional(
 		Type.Boolean({
@@ -878,25 +878,17 @@ export default function quiz(pi: ExtensionAPI) {
 		name: "quiz",
 		label: "quiz",
 		description:
-			"Ask the user a GRADED question with a known correct answer, then instantly grade and give feedback. Unlike ask_user_question (which collects preferences/decisions with no right answer), quiz always has a correct answer supplied by you, marks the user's selection right/wrong (✓/✗), reveals the correct answer, and can show an explanation. Use it to (1) assess what the learner already understands before teaching, and (2) run tight practice/retrieval loops after explaining, or probe understanding whenever you're unsure they've got it. Options-only: single-select or multi-select, plus an automatic 'I don't know' choice so the user can signal a genuine gap instead of guessing. An always-present optional note field (Tab to focus it) lets the user attach a free-text note to ANY answer; it reaches you only when non-empty. No free-text answers — for non-graded questions use ask_user_question instead.",
+			"Ask the user a graded question with a known correct answer, then grade it and give feedback. Unlike ask_user_question (which collects preferences and decisions with no right answer), quiz takes the correct answer from you, marks the user's selection right or wrong, reveals the correct answer, and shows an explanation. Use it to find out what the learner already understands before teaching, and to check understanding after explaining. Options only, single-select or multi-select, plus an automatic 'I don't know' choice so the user can signal a gap instead of guessing. An optional note field lets the user attach free text to any answer; it reaches you only when non-empty. For non-graded questions use ask_user_question.",
 		promptSnippet:
 			"Use the quiz tool to test the user with a graded multiple-choice or multi-select question (required correct answer + required explanation). For non-graded questions, use ask_user_question.",
 		promptGuidelines: [
-			"quiz is GRADED; ask_user_question is not. If the question has a correct answer, use quiz. If you just need a preference, decision, or open-ended input, use ask_user_question.",
-			'correctAnswer is REQUIRED and is the option value, not a position number. Single-select: one string (e.g. "mercury"). Multi-select: an array of strings (e.g. ["belize", "niue"]).',
-			"Always pass the option's `value` string as correctAnswer — it is self-checking and prevents miscounting positions. A value that matches no option is a hard error.",
-			"explanation is REQUIRED — always say why the correct answer is correct.",
+			"correctAnswer is the option `value`, not a position number: one string for single-select, an array for multi-select. A value that matches no option is an error.",
 			"Multi-select is graded as an exact-set match: the user is correct only if they select every correct option and no incorrect ones.",
-			"There is no free-text mode. An 'I don't know' choice is ALWAYS added automatically — provide ONLY the real, gradable options (at least two). Never add your own uncertainty/opt-out option like 'I don't know', 'I'm not sure', or 'Not sure'; that is handled for you and a manual one would be redundant or gradable-as-wrong.",
-			"If a result comes back as dontKnow, the user honestly did not know and did NOT guess — treat it as a genuine knowledge gap to teach into, not as a wrong answer.",
-			"Any answer (right, wrong, or 'I don't know') may carry an optional free-text `note` the user typed in the always-present note field. When present it reflects what they were thinking or unsure about — read it and let it steer your follow-up. It is omitted entirely when empty.",
-			"Treat each wrong answer (distractor) as a diagnostic probe, not just filler: make it a specific, believable mistake the user might actually hold — a common misconception, or an adjacent/easily-confused concept — so that WHICH wrong answer they pick reveals WHICH nuance of their understanding is off. You learn far more from a targeted wrong choice than from a binary right/wrong, and the choice tells you exactly which gap to teach into next (and what the explanation should address).",
-			"Guardrail: every distractor must be unambiguously wrong on the intended reading — tempting, but a real error, not a defensible alternative. Don't drift into trick questions.",
-			"Anti-guessing hygiene: don't let the correct answer stand out by form (longest, most precise, most hedged, or the only one in the right format). Keep options similar in length, specificity, and phrasing so it can't be picked from shape alone.",
+			"An 'I don't know' choice is added automatically, so provide only the real, gradable options (at least two); a manual opt-out option would be graded as wrong.",
+			"A dontKnow result means the user chose not to guess: a knowledge gap, not a wrong answer.",
+			"Any answer may carry an optional free-text `note` the user typed; when present it reflects what they were thinking or unsure about. It is omitted when empty.",
 			"Set multiSelect: true only when more than one option is correct.",
-			"Options are shuffled before display by default, so don't worry about which position you list the correct answer in. Set shuffle: false only when option order is meaningful (ordered values, or an 'All/None of the above' option that must stay last).",
-			"To probe nuance, ask several quick quiz questions and adapt each one based on the previous answers, rather than writing one giant question.",
-			"Don't leak the answer through formatting: keep option phrasing/length even and don't hint which is correct.",
+			"Options are shuffled before display by default. Set shuffle: false only when option order is meaningful (ordered values, or an 'All/None of the above' option that must stay last).",
 		],
 		parameters: QuizParams,
 

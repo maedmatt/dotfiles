@@ -22,12 +22,6 @@ Use this skill only when the user wants a new or modified image artifact produce
 - Image edits: change a background, remove or replace an object, preserve a subject while changing style, apply a reference style, or localize text.
 - Codex-mediated generation where the current harness should indirectly call Codex CLI rather than using its own image tool.
 
-## Non-goals
-
-- Do not use this skill to analyze, summarize, compare, caption, OCR, or read existing images unless that analysis is required to generate an edited/new image artifact.
-- Do not call Codex just to inspect PNG/JPEG files, screenshots, diagrams, or generated outputs.
-- Do not route post-generation visual QA to Codex; inspect generated artifacts with the current multimodal model/tooling after Codex creates them.
-
 ## Preconditions
 
 Before a live run, check the local Codex CLI once when the environment is unknown:
@@ -45,7 +39,7 @@ codex features enable image_generation
 
 ## Delegation command pattern
 
-Prefer non-interactive execution so the outer agent can verify artifacts deterministically. Current Codex CLI versions do **not** support `--ask-for-approval`; use a config override for non-interactive approval policy:
+Prefer non-interactive execution so the outer agent can verify artifacts deterministically. Set the approval policy through a config override:
 
 ```bash
 codex exec \
@@ -111,6 +105,8 @@ Do not run shell commands, copy files, or modify unrelated files. Use `$imagegen
 - Because the built-in image tool may not guarantee an exact filename parameter, always verify the actual generated file path after Codex returns.
 - Copy or move the generated image to the requested final path only after inspecting that it is the intended image.
 - Do not claim that an image was created unless both the generated artifact and the requested final artifact exist, or unless you explicitly report that placement failed after generation.
+- Check whether the requested path already exists before overwriting it, unless the user asked for a replacement.
+- Keep temporary prompts, transcripts, and failed intermediate images out of final asset directories.
 
 ## Prompting rules
 
@@ -136,15 +132,7 @@ After `codex exec` returns:
 - `codex` command missing: report that Codex CLI is not installed or not on `PATH`.
 - Authentication missing: tell the user to run `codex login`; do not request secrets in chat.
 - Feature unavailable: report the missing `image_generation` feature and the enable command.
-- CLI option drift: if `codex exec` rejects an option, run `codex exec --help` and update the invocation. In particular, replace obsolete `--ask-for-approval never` with `-c 'approval_policy="never"'` on current CLI versions.
+- CLI option drift: if `codex exec` rejects an option, run `codex exec --help` and update the invocation.
 - Nested shell sandbox failure after generation, such as `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`, is usually a file-placement failure, not necessarily an image-generation failure. Inspect Codex's reported generated image directory and copy the verified image with the outer agent instead of rerunning blindly.
 - No output path found: inspect the Codex last message/transcript and output directory; if still absent, report that Codex did not return an image artifact.
 - Safety or policy refusal from Codex: report the refusal accurately and offer a compliant alternative prompt.
-
-## Guardrails
-
-- Do not use this skill as a generic image API wrapper; its purpose is Codex CLI delegation for image generation/edit-generation.
-- Do not use this skill for standalone image understanding. Existing image analysis belongs to the current multimodal model/tooling unless Codex needs the image as input to produce an edited/generated artifact.
-- Do not fabricate output filenames, dimensions, or successful generation.
-- Do not overwrite existing assets without checking whether the path already exists or the user explicitly requested replacement.
-- Do not leave temporary prompts, transcripts, or failed intermediate images in final asset directories.

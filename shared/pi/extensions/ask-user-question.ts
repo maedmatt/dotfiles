@@ -70,7 +70,7 @@ const OptionSchema = Type.Object({
 
 const AskUserQuestionParams = Type.Object({
 	question: Type.String({
-		description: "The single question to ask the user. Ask exactly one question per tool call.",
+		description: "The single question to ask the user.",
 	}),
 	details: Type.Optional(
 		Type.String({
@@ -573,15 +573,6 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 			"Ask the user a single question and pause execution until they answer. Use this when requirements are ambiguous, user preferences are needed, a decision would materially affect implementation, or you need confirmation before proceeding. Ask exactly one question per tool call, and prefer multiple separate tool calls over bundling unrelated questions together.",
 		promptSnippet:
 			"Use this tool to ask exactly one clarifying question, missing-requirement question, preference question, or decision question before continuing.",
-		promptGuidelines: [
-			"Ask exactly one question per tool call.",
-			"If you need answers to multiple questions, make multiple separate ask_user_question tool calls instead of combining them into one prompt.",
-			'Users will always be able to select "Other" to provide custom text input when options are provided.',
-			"Use multiSelect: true only when you need multiple answers to the same question.",
-			'If you recommend a specific option, make it the first option in the list and add "(Recommended)" at the end of the label.',
-			"Prefer this tool over guessing when requirements, preferences, or implementation choices are unclear.",
-			"Use this tool when multiple valid implementation paths exist and the preferred path depends on user choice.",
-		],
 		parameters: AskUserQuestionParams,
 
 		async execute(_toolCallId, params, signal, _onUpdate, ctx) {

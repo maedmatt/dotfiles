@@ -43,7 +43,7 @@ export function createWebFetchTool(composition?: WebFetchToolComposition) {
 		name: "webfetch",
 		label: "Web Fetch",
 		description:
-			"Fetch a single URL and return readable markdown, text, raw HTML/source, or an inline raster image.",
+			"Fetch one public http(s) URL and return it as markdown (default), plain text, raw HTML, or, for png/jpeg/gif/webp, an inline image. Private and local hosts, URLs with embedded credentials, and non-image binary content are rejected; responses are capped at 5 MB and at most 5 redirects are followed. Output longer than 2000 lines or 50 KB is truncated, with the full text saved to a temp file whose path is given in the result.",
 		promptSnippet: "Fetch one public URL as markdown, text, html, or an inline raster image",
 		promptGuidelines: [
 			"Use webfetch when the user provides a URL or after websearch identifies a page to inspect.",
@@ -58,7 +58,7 @@ export function createWebFetchTool(composition?: WebFetchToolComposition) {
 			),
 			timeout: Type.Optional(
 				Type.Number({
-					description: "Optional timeout in seconds. Overrides the web-tools fetch timeout setting.",
+					description: "Timeout in seconds (default 30, clamped to 1..120).",
 				}),
 			),
 		}),

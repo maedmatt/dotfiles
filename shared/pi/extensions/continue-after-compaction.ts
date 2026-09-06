@@ -10,18 +10,14 @@ const buildContinuationPrompt = (sessionFile: string | undefined, compactionEntr
 					"Do not launch a nested Pi process or open the session with `pi --session`.",
 				].join(" ");
 
-	return `Compaction has just completed. Resume the existing task rather than waiting for another user prompt.
+	return `Compaction has just completed. First decide whether the task that was in progress had already finished before compaction: if it had, say so and stop. Otherwise resume it rather than waiting for another user prompt.
 
 ${sessionSource}
 The new compaction entry ID is ${JSON.stringify(compactionEntryId)}.
 
-Before continuing:
+Recover from the session history what the compaction summary may have lost: the original goal, the user's constraints, decisions made, files changed, commands and tests run, unresolved issues, and the intended next step. The messages and tool calls just before the compaction entry matter most. JSONL append order includes abandoned branches, so follow parentId links to stay on the active branch. The current worktree is authoritative for file state; the session history is authoritative for user intent.
 
-1. Review the active session branch leading to the compaction entry. Focus first on messages and tool calls immediately before compaction, searching earlier history only as needed. Remember that JSONL append order can include abandoned branches, so follow parentId links rather than blindly treating every entry as active.
-2. Reconstruct the original goal, user constraints, decisions made, files changed, commands and tests run, unresolved issues, and intended next action.
-3. Reconcile the recovered history with the compaction summary and current repository state. Treat the current worktree as authoritative for file state and the original session history as authoritative for user intent.
-4. Briefly state the context you recovered.
-5. If work remains, immediately perform the next unfinished step. If the task is complete, state that and do not invent more work. Do not ask the user to repeat prior context unless the session data is genuinely unavailable or ambiguous.`;
+State briefly what you recovered, then do the next unfinished step. Ask the user to repeat context only if the session data is unavailable or ambiguous.`;
 };
 
 /**

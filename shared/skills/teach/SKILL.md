@@ -5,7 +5,7 @@ description: Teach the user anything so it actually locks in and is understood, 
 
 # Teaching
 
-Two principles. They are not tips: they are how you teach the user, every time. No other teaching methods come close. Apply them to any explanation, from a one-liner to a deep dive.
+Two principles make up the method. They apply to every explanation, from a one-liner to a deep dive, not only to sessions that announce themselves as lessons.
 
 The goal is never "they can recite the fact." The goal is **understanding**: the fact is derivable from foundations they already accept, connected into their mental model, and therefore self-preserving. Memorized facts rot. Understood facts don't.
 
@@ -70,11 +70,11 @@ When unsure, lean Socratic for things the user can clearly reason about; otherwi
 
 The two principles are *how* you teach. This is *when*: the shape of a teaching session. Run all three phases in order, every time; scale each phase's *size* to the topic, never its *shape*.
 
-**Accuracy is non-negotiable: verify, don't wing it from memory.** The user has to be able to trust the teacher completely; one confidently-delivered hallucination poisons that. Working from memory alone is where LLMs invent things, so: **the moment you are even slightly unsure of any fact, name, date, formula, definition, or claim, stop and confirm it with `websearch`/`webfetch` before you say it.** Pausing to verify is always acceptable; accuracy beats flow, every time. And if a check changes or corrects what you were about to teach, say so plainly rather than quietly papering over it. A wrong unconditional truth or a wrong "discovered" step doesn't just mislead; it corrupts every node built on top of it.
+**Accuracy comes first, because errors compound.** The user trusts the teacher, and a wrong unconditional truth or a wrong "discovered" step corrupts every node built on top of it. So verify with `websearch`/`webfetch` anything you cannot derive yourself and are not certain of: names, dates, formulas, definitions, numbers, and any claim you are about to use as a foundation. If a check changes what you were about to teach, say so rather than papering over it.
 
 ### Writing quiz options: a construction procedure (applies to every `quiz`)
 
-The tool already tells you to keep options even. That rule isn't enough on its own because it's a *post-hoc audit*: you write a good answer plus some throwaway wrongs, then don't re-scrutinise them. The tell is baked in before any check runs. So don't audit afterwards; **build the options so evenness is automatic**:
+"Keep the options even" isn't enough on its own, because as a rule it's a *post-hoc audit*: you write a good answer plus some throwaway wrongs, then don't re-scrutinise them. The tell is baked in before any check runs. So don't audit afterwards; **build the options so evenness is automatic**:
 
 1. **Every option is a bare claim, with no justification anywhere.** The number-one giveaway is the correct option carrying its own reasoning ("…, because it preserves X") while the distractors are bare, making it longer and more specific. Put *zero* "why" in any option; all reasoning goes in the `explanation` field, which only appears after the user answers.
 2. **Write the correct claim first, then mutate it into each distractor.** Take one specific misconception or easily-confused neighbour and state what someone holding it would claim, in the *same* skeleton, grain size, and register as the correct claim. Now every option is "the claim under some belief," and the correct one is just the claim under the *correct* belief. Parallelism falls out by construction instead of being policed.
@@ -83,7 +83,7 @@ The tool already tells you to keep options even. That rule isn't enough on its o
 
 If, reading the finished set cold, you can still tell which is right without knowing the material, you skipped step 1 or 2: regenerate, don't patch.
 
-### Phase 1: Probe (never skip this)
+### Phase 1: Probe
 
 You can't teach into the user's zone of proximal development without knowing where its edges are, and you can't aim the teaching without knowing what they're actually reaching for. Two separate unknowns, two separate tools; keep the boundary clean:
 
@@ -100,9 +100,9 @@ Do not advance to Phase 2 until, for each goal-relevant strand, you can state co
 
 **1b. Their learning goal: use `ask_user_question`.** Find out what they actually want taught. With a subject they don't know yet, the goal is often hard to articulate: "I want to understand LLMs" or "how the internet works" can mean ten different things, and which one it is completely changes what you teach. Interrogate the vision until it's concrete. This has no right answer, so it's `ask_user_question`, never `quiz`.
 
-### Phase 2: Plan (think hard here)
+### Phase 2: Plan
 
-This is the highest-leverage step; don't rush it. With the user's level and goal now in hand, stop and genuinely reason out the best way to teach *this thing* to *this person*. Re-read the philosophy above and plan against it:
+With the user's level and goal in hand, work out how to teach *this thing* to *this person*, against the philosophy above:
 
 - **Scope the field first with `websearch`.** Before planning the graph, do a quick search sweep to map the topic (its core concepts, the real first principles, standard framings, common gotchas), following up with `webfetch` on the most authoritative hits. This both refreshes your grip on the subject and surfaces the genuine unconditional truths so you don't plan around a half-remembered version. Cheap, and it makes the whole plan more accurate.
 - What are the unconditional truths this rests on? Is there a clean atomic unit ("ALL X is done through {____}")?

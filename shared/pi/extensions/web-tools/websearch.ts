@@ -38,7 +38,7 @@ export function createWebSearchTool(composition?: WebSearchToolComposition) {
 	return {
 		name: "websearch",
 		label: "Web Search",
-		description: "Search the public web for current information and candidate URLs to inspect with webfetch.",
+		description: "Search the public web (Exa) for current information and candidate URLs to inspect with webfetch. Each result has a title, URL, and short snippet; the search does not fetch page contents.",
 		promptSnippet: "Search the public web for current information and relevant URLs",
 		promptGuidelines: [
 			"Use websearch when the user needs current public-web information or when the right URL is not yet known.",
@@ -48,13 +48,13 @@ export function createWebSearchTool(composition?: WebSearchToolComposition) {
 			query: Type.String({ description: "Search query." }),
 			maxResults: Type.Optional(
 				Type.Number({
-					description: "Maximum number of results to return. Overrides the web-tools search default max results setting.",
+					description: "Maximum number of results (default 8, clamped to 1..20).",
 				}),
 			),
 			depth: Type.Optional(
 				StringEnum([...SEARCH_DEPTHS], {
 					description:
-						"Search depth. Overrides the web-tools search default depth setting. 'deep' is accepted as a compatibility alias and mapped to 'fast' for the current Exa provider.",
+						"Search depth: 'auto' (default) or 'fast'. 'deep' is accepted and mapped to 'fast'.",
 				}),
 			),
 		}),

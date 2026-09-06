@@ -1,6 +1,6 @@
 These are the cross-project default rules.
 
-Do not assume a project domain until you inspect the repo. Use repo-local files and optional domain overlays to specialize behavior for areas like robotics, deployment, or safety-critical systems.
+Do not assume a project domain until you inspect the repo. Repo-local rule files specialize behavior per project.
 
 ## Core Principles
 
