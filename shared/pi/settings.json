@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "0.87.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-6-astra",
   "defaultThinkingLevel": "xhigh",
@@ -8,7 +8,7 @@
     "npm:@plannotator/pi-extension"
   ],
   "enabledModels": [
-    "xai/grok-4.6:xhigh",
+    "xai/grok-4.7:xhigh",
     "openai-codex/gpt-6-astra:xhigh",
     "openrouter/~deepseek/deepseek-v4-flash-latest:high"
   ],
