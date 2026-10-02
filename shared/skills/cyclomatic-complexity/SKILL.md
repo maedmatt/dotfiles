@@ -20,7 +20,7 @@ Thresholds:
 - 15+: must split, no debate
 
 Tools:
-- Python: `uvx radon cc -s -a <path>` — runs via uv, no global install needed
+- Python: in a uv project, `uv add --dev radon` once, then `uv run radon cc -s -a <path>`; outside one, `uvx radon cc -s -a <path>` (no install needed).
 - JS/TS: eslint `complexity` rule, when the project has an eslint config
 - Anything else: count manually, per function, show the count
 
