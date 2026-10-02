@@ -14,7 +14,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable[1m]",
+  "model": "fable",
   "hooks": {
     "SessionStart": [
       {
@@ -44,16 +44,22 @@
       }
     }
   },
+  "feedbackDrafts": "off",
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
   "awaySummaryEnabled": false,
-  "feedbackDrafts": "off",
   "tui": "fullscreen",
+  "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
   "remoteControlAtStartup": false,
-  "skipAutoPermissionPrompt": true,
-  "agentPushNotifEnabled": false
+  "agentPushNotifEnabled": false,
+  "skipAutoPermissionPrompt": true
 }
