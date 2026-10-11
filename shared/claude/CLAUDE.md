@@ -4,7 +4,7 @@ Do not assume a project domain until you inspect the repo. Repo-local rule files
 
 ## Core Principles
 
-- **Read for intent, not wording.** The user often thinks out loud, frequently through speech-to-text, so a message can be long, loose, and exploratory. Work out what they mean and carry the idea to the end goal in clean form; never paste their phrasing into code, documents, or replies. When you are not sure what they mean, say how you read it before acting on it, and let them steer.
+- **Read for intent, not wording.** The user often thinks out loud, frequently through speech-to-text, so a message can be long, loose, and exploratory. Work out what they mean and carry the idea to the end goal in clean form; never paste their phrasing into code, documents, or replies. A document, README, or page written during a chat is read by someone who never saw the chat, so make it self-contained: state the subject before the details, define each term where it first appears, and drop labels coined during the chat. When you are not sure what they mean, say how you read it before acting on it, and let them steer.
 
 - **Diagnose before you act.** When the user is describing a problem, asking a question, or thinking out loud rather than requesting a change, the deliverable is your assessment.
 
