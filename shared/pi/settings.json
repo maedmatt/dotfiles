@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.0",
+  "lastChangelogVersion": "1.1.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-6-astra",
   "defaultThinkingLevel": "xhigh",
@@ -10,7 +10,7 @@
   "enabledModels": [
     "xai/grok-4.7:xhigh",
     "openai-codex/gpt-6-astra:xhigh",
-    "openrouter/~deepseek/deepseek-v4-flash-latest:high"
+    "openrouter/deepseek/deepseek-v4.1-flash:high"
   ],
   "enableInstallTelemetry": false,
   "showHardwareCursor": false,
