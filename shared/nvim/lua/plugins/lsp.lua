@@ -15,6 +15,19 @@ return {
     config = function()
       local lspconfig = require("lspconfig")
 
+      -- Drop diagnostics for files that are not open in a buffer. texlab reports
+      -- every file of the project, and Neovim 0.12 queues a BufRead autocmd per
+      -- report for an unloaded buffer without removing the earlier ones, so
+      -- opening such a file later ran thousands of callbacks (restructured
+      -- upstream after 0.12). A file gets its diagnostics once it is opened.
+      local publish = vim.lsp.handlers["textDocument/publishDiagnostics"]
+      vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx)
+        if result and vim.fn.bufloaded(vim.uri_to_fname(result.uri)) == 0 then
+          return
+        end
+        return publish(err, result, ctx)
+      end
+
       require("mason-lspconfig").setup({
         handlers = {
           function(server_name)
