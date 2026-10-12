@@ -53,6 +53,7 @@
     }
   },
   "awaySummaryEnabled": false,
+  "idleCompaction": false,
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
