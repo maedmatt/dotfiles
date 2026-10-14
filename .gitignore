@@ -3,5 +3,3 @@
 shared/codex/config.toml
 shared/omp/*.lock
 shared/yazi/flavors/
-shared/skills/.system/
-shared/skills/synced/

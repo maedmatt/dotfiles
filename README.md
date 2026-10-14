@@ -29,9 +29,9 @@ export PATH="$HOME/.local/share/pi-node/current/bin:$PATH"
 
 ## Oh My Pi
 
-`--omp` (also included in `--all`) links `shared/omp/config.yml`, the shared agent
-rules, and `shared/skills/` into `~/.omp/agent/`. Existing files and directories
-are backed up with a `.backup` suffix. Install OMP and authenticate with your
+`--omp` (also included in `--all`) links `shared/omp/config.yml` and the shared agent
+rules into `~/.omp/agent/`, and the shared skills into `~/.agents/skills/` (see
+[Skills](#skills)). Existing files and directories are backed up with a `.backup` suffix. Install OMP and authenticate with your
 model providers separately on each machine.
 
 Settings changes made through OMP update the tracked config. Keep credentials
@@ -40,8 +40,8 @@ untracked overlay, for example `omp --config ~/.omp/agent/local.yml`.
 The overlay file must exist before using that command.
 
 Credentials, databases, sessions, caches, and the Herdr-managed extension stay
-local. Skills use OMP's native directory, without enabling discovery of other
-agents' global configuration. Pi-only skills still require Pi.
+local. OMP reads skills from `~/.agents/skills/` by default; discovery of other
+agents' global configuration stays off. Pi-only skills still require Pi.
 
 ## Structure
 
@@ -75,12 +75,31 @@ Task-specific rules (commits style, Python conventions) live as skills under `sh
 
 ## Skills
 
-Skills are shared across Claude Code, Codex, OpenCode, Pi, and Oh My Pi via symlinks to `shared/skills/`.
+`shared/skills/` is the source of truth for the skills shared across Claude Code,
+Codex, OpenCode, Pi, and Oh My Pi. The installer links each skill folder into two
+places:
 
-To install new skills:
+- `~/.agents/skills/`, the Agent Skills user folder that Codex, OpenCode, Pi, and Oh My Pi read
+- `~/.claude/skills/`, because Claude Code reads only its own folder
+
+Both folders are real directories on each machine, not links to the repo. Tools
+that install into them write locally instead of into `shared/skills/`: Claude
+Code's claude.ai skill sync (`~/.claude/skills/synced/`), `hf skills add`, and
+Omarchy. The shell rc sets `OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1` so OpenCode
+does not also load Claude Code's folder, which holds the Claude-only claude.ai skills.
+
+To add a skill, put its folder in `shared/skills/` and re-run the installer for
+your agents (for example `./install.sh --claude --pi`). Re-running also removes
+links to skills deleted from `shared/skills/`. Restart or reload each agent afterwards.
+
+Skills that a tool's installer writes stay out of the repo, because the tool
+updates them together with its own version. Run these on each machine:
 
 ```bash
-npx add-skill <repo> -g -a claude-code
+hf skills add --global                           # hf-cli; hf update refreshes it
+curl -fsSL https://plannotator.ai/install.sh | bash  # plannotator-review, -annotate, -last
 ```
 
-The `-g` flag installs globally to `~/.claude/skills/`, which symlinks to `shared/skills/`. Each agent uses the same directory; reload its skills or restart it after adding new ones.
+Both write to `~/.agents/skills/` and `~/.claude/skills/`; plannotator puts a
+Claude Code variant in the second. The `herdr` skill in `shared/skills/` only
+points to `herdr --skill`, which prints the skill for the installed Herdr version.

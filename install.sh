@@ -48,6 +48,33 @@ link() {
     echo "$2 → $1"
 }
 
+# Agent skill folders are real local folders with one link per skill in
+# shared/skills. Tools that write into them (Claude Code's claude.ai sync,
+# hf skills add, Omarchy, Codex system skills) then stay out of the repo.
+# Earlier installs linked the whole folder to shared/skills; remove that link.
+unlink_skills_folder() {
+    if [ -L "$1" ] && [ "$(readlink "$1")" = "$DOTFILES/shared/skills" ]; then
+        rm "$1"
+        echo "Removed $1 → $DOTFILES/shared/skills"
+    fi
+}
+
+link_skills() {
+    unlink_skills_folder "$1"
+    mkdir -p "$1"
+    for skill in "$DOTFILES/shared/skills/"*/; do
+        [ -f "$skill/SKILL.md" ] || continue
+        link "${skill%/}" "$1/$(basename "$skill")"
+    done
+    # Drop links to skills deleted from shared/skills
+    for entry in "$1"/*; do
+        if [ -L "$entry" ] && [ ! -e "$entry" ] && [[ "$(readlink "$entry")" == "$DOTFILES/shared/skills/"* ]]; then
+            rm "$entry"
+            echo "Removed stale $entry"
+        fi
+    done
+}
+
 install_apps() {
     echo "Installing apps..."
     if [[ "$PLATFORM" == "macos" ]]; then
@@ -234,7 +261,12 @@ install_claude() {
     mkdir -p "$HOME/.claude"
     link "$DOTFILES/shared/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
     link "$DOTFILES/shared/claude/commands" "$HOME/.claude/commands"
-    link "$DOTFILES/shared/skills" "$HOME/.claude/skills"
+    # Claude Code is the only agent that does not read ~/.agents/skills
+    link_skills "$HOME/.claude/skills"
+    # Earlier installs left the claude.ai skills that Claude Code syncs in the repo
+    if [ -d "$DOTFILES/shared/skills/synced" ] && [ ! -e "$HOME/.claude/skills/synced" ]; then
+        mv "$DOTFILES/shared/skills/synced" "$HOME/.claude/skills/synced"
+    fi
     if [[ "$PLATFORM" == "macos" ]]; then
         link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
         link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
@@ -248,7 +280,9 @@ install_opencode() {
     link "$DOTFILES/shared/opencode/tui.json" "$HOME/.config/opencode/tui.json"
     link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
     link "$DOTFILES/shared/opencode/themes" "$HOME/.config/opencode/themes"
-    link "$DOTFILES/shared/skills" "$HOME/.config/opencode/skills"
+    # OpenCode reads ~/.agents/skills; the shell rc stops it reading ~/.claude/skills
+    unlink_skills_folder "$HOME/.config/opencode/skills"
+    link_skills "$HOME/.agents/skills"
 }
 
 install_codex() {
@@ -259,14 +293,18 @@ install_codex() {
         link "$DOTFILES/shared/codex/config.toml" "$HOME/.codex/config.toml"
     fi
     link "$DOTFILES/shared/codex/prompts" "$HOME/.codex/prompts"
-    link "$DOTFILES/shared/skills" "$HOME/.codex/skills"
+    # Codex reads ~/.agents/skills; ~/.codex/skills stays local for its system skills
+    unlink_skills_folder "$HOME/.codex/skills"
+    link_skills "$HOME/.agents/skills"
 }
 
 install_pi() {
     echo "Installing Pi config..."
     mkdir -p "$HOME/.pi/agent/extensions" "$HOME/.pi/agent/themes"
     link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
-    link "$DOTFILES/shared/skills" "$HOME/.pi/agent/skills"
+    # Pi reads ~/.agents/skills
+    unlink_skills_folder "$HOME/.pi/agent/skills"
+    link_skills "$HOME/.agents/skills"
     link "$DOTFILES/shared/pi/settings.json" "$HOME/.pi/agent/settings.json"
     link "$DOTFILES/shared/pi/keybindings.json" "$HOME/.pi/agent/keybindings.json"
     link "$DOTFILES/shared/pi/cloak.json" "$HOME/.pi/agent/cloak.json"
@@ -293,7 +331,9 @@ install_omp() {
     mkdir -p "$HOME/.omp/agent"
     link "$DOTFILES/shared/omp/config.yml" "$HOME/.omp/agent/config.yml"
     link "$DOTFILES/shared/codex/AGENTS.md" "$HOME/.omp/agent/AGENTS.md"
-    link "$DOTFILES/shared/skills" "$HOME/.omp/agent/skills"
+    # Oh My Pi reads ~/.agents/skills by default (skills.enableAgentsUser)
+    unlink_skills_folder "$HOME/.omp/agent/skills"
+    link_skills "$HOME/.agents/skills"
 }
 
 install_dotfiles() {
