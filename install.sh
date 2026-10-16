@@ -348,6 +348,7 @@ install_dotfiles() {
     # Omarchy owns btop (theme follows the system theme)
     [ -d /usr/share/omarchy ] || link "$DOTFILES/shared/btop/btop.conf" "$HOME/.config/btop/btop.conf"
     link "$DOTFILES/shared/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+    link "$DOTFILES/shared/gitconfig" "$HOME/.gitconfig"
     # Platform-specific
     # Omarchy owns ghostty (dynamic theme, font)
     [ -d /usr/share/omarchy ] || link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
