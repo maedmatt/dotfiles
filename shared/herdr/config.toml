@@ -9,7 +9,7 @@ onboarding = false
 # Built-in themes: catppuccin, terminal, tokyo-night, dracula, nord,
 #                  gruvbox, one-dark, solarized, kanagawa, rose-pine,
 #                  vesper
-name = "catppuccin"
+name = "terminal"
 
 # Follow host terminal light/dark appearance and switch Herdr UI themes.
 # Existing manual behavior is unchanged unless this is true.
@@ -26,6 +26,11 @@ name = "catppuccin"
 # green = "#a6e3a1"
 
 auto_switch = false
+
+# The active tab is drawn as panel_bg text on an accent background, so with
+# the terminal palette panel_bg must be dark to stay readable.
+[theme.custom]
+panel_bg = "black"
 [terminal]
 # Executable used for new interactive panes.
 # Empty means $SHELL, then /bin/sh.
@@ -249,7 +254,7 @@ resume_agents_on_restore = true
 # includes your ~/.ssh/config first and adds ServerAliveInterval/
 # ServerAliveCountMax as a fallback (so any keepalive you set yourself still
 # wins) to survive idle network/NAT timeouts. Set false to run plain ssh against
-# your ssh config unchanged — this does not force keepalive gruvboxoff, it only stops
+# your ssh config unchanged — this does not force keepalive off, it only stops
 # herdr from adding its own.
 # manage_ssh_config = true
 

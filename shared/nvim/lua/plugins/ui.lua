@@ -23,7 +23,6 @@ return {
           which_key = true,
         },
       })
-      vim.cmd.colorscheme("catppuccin-macchiato")
     end,
   },
 
@@ -34,7 +33,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "catppuccin-macchiato",
+        theme = "auto",
         globalstatus = true,
         component_separators = { left = "", right = "" },
         section_separators = { left = "█", right = "█" },

@@ -91,8 +91,22 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({ { import = "plugins" } }, {
-  install = { missing = true, colorscheme = { "catppuccin-macchiato" } },
+-- Follow the Omarchy theme when present: each theme ships a lazy spec list
+-- with the colorscheme plugin plus a LazyVim entry naming the colorscheme.
+local theme, plugins = "catppuccin-macchiato", { { import = "plugins" } }
+local ok, specs = pcall(dofile, vim.fn.expand("~/.local/state/omarchy/current/theme/neovim.lua"))
+if ok and type(specs) == "table" then
+  for _, spec in ipairs(specs) do
+    if spec[1] == "LazyVim/LazyVim" then
+      theme = spec.opts.colorscheme
+    else
+      plugins[#plugins + 1] = spec
+    end
+  end
+end
+
+require("lazy").setup(plugins, {
+  install = { missing = true, colorscheme = { theme, "catppuccin-macchiato" } },
   checker = { enabled = true, notify = false },
   change_detection = { enabled = true, notify = false },
   performance = {
@@ -103,6 +117,10 @@ require("lazy").setup({ { import = "plugins" } }, {
     },
   },
 })
+
+if not pcall(vim.cmd.colorscheme, theme) then
+  vim.cmd.colorscheme("catppuccin-macchiato")
+end
 
 -- ============================================================================
 -- Keymaps
