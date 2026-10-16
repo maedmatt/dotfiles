@@ -76,12 +76,8 @@ export default function mdLog(pi: ExtensionAPI) {
 	function appendToFile(text: string): void {
 		if (!logFile) return;
 		try {
-			let current = "";
-			if (fs.existsSync(logFile)) {
-				current = fs.readFileSync(logFile, "utf-8");
-			}
-			const prefix = current.trim().length > 0 ? "\n\n" : "";
-			fs.writeFileSync(logFile, current + prefix + text + "\n", "utf-8");
+			const prefix = fs.existsSync(logFile) && fs.statSync(logFile).size > 0 ? "\n\n" : "";
+			fs.appendFileSync(logFile, prefix + text + "\n", "utf-8");
 		} catch {
 			// File may have been deleted externally; ignore.
 		}
