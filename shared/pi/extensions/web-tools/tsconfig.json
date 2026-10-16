@@ -23,7 +23,6 @@
     "./public-web-client.ts",
     "./network.ts",
     "./html.ts",
-    "./truncation.ts",
     "./temp.ts",
     "./render.ts",
     "./tool-output.ts",
