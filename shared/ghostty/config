@@ -27,4 +27,4 @@ clipboard-read = allow
 clipboard-write = allow
 
 # Keybindings
-keybind = shift+enter=text:\x1b\r
+keybind = shift+enter=csi:13;2u
