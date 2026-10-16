@@ -2,4 +2,3 @@
 .claude/
 shared/codex/config.toml
 shared/omp/*.lock
-shared/yazi/flavors/
