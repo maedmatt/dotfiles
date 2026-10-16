@@ -83,6 +83,10 @@ install_apps() {
         fi
         # tree-sitter-cli: nvim-treesitter main branch builds parsers with it
         brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript mermaid-cli bun
+    elif command -v pacman &> /dev/null; then
+        # Arch / Omarchy: everything is in the official repos; mermaid-cli via npm
+        sudo pacman -S --needed neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript bun bat jq
+        command -v mmdc &> /dev/null || npm install -g @mermaid-js/mermaid-cli
     else
         # Detect architecture
         ARCH=$(uname -m)  # x86_64 or aarch64
@@ -267,10 +271,8 @@ install_claude() {
     if [ -d "$DOTFILES/shared/skills/synced" ] && [ ! -e "$HOME/.claude/skills/synced" ]; then
         mv "$DOTFILES/shared/skills/synced" "$HOME/.claude/skills/synced"
     fi
-    if [[ "$PLATFORM" == "macos" ]]; then
-        link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
-        link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
-    fi
+    link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
+    link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
 }
 
 install_opencode() {
@@ -343,10 +345,12 @@ install_dotfiles() {
     link "$DOTFILES/shared/nvim" "$HOME/.config/nvim"
     link "$DOTFILES/shared/yazi" "$HOME/.config/yazi"
     link "$DOTFILES/shared/ruff/ruff.toml" "$HOME/.config/ruff/ruff.toml"
-    link "$DOTFILES/shared/btop/btop.conf" "$HOME/.config/btop/btop.conf"
+    # Omarchy owns btop (theme follows the system theme)
+    [ -d /usr/share/omarchy ] || link "$DOTFILES/shared/btop/btop.conf" "$HOME/.config/btop/btop.conf"
     link "$DOTFILES/shared/herdr/config.toml" "$HOME/.config/herdr/config.toml"
     # Platform-specific
-    link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
+    # Omarchy owns ghostty (dynamic theme, font)
+    [ -d /usr/share/omarchy ] || link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"
     if [[ "$PLATFORM" == "macos" ]]; then
         link "$DOTFILES/macos/sketchybar" "$HOME/.config/sketchybar"

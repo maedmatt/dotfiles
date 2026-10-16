@@ -1,3 +1,9 @@
+# Omarchy: its env-bootstrap must run even for non-interactive shells
+if [ -r /usr/share/omarchy/default/bash/env-bootstrap ]; then
+    source /usr/share/omarchy/default/bash/env-bootstrap
+    OMARCHY=1
+fi
+
 # OpenCode: load shared skills from ~/.agents/skills, not Claude Code's folder
 export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1
 
@@ -7,30 +13,48 @@ case $- in
       *) return;;
 esac
 
-# History
-HISTSIZE=10000
-HISTFILESIZE=20000
-HISTCONTROL=ignoredups:erasedups
-shopt -s histappend
-
-# Check window size after each command
-shopt -s checkwinsize
-
-# Prompt - cyan container ID when Docker, yellow hostname when SSH'd
-if [ -f /.dockerenv ]; then
-    _container_id=$(hostname)
-    PS1='\[\033[38;5;81m\]'"$_container_id"'\[\033[0m\] \[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
-elif [ -n "$SSH_CONNECTION" ]; then
-    PS1='\[\033[38;5;226m\](\h)\[\033[0m\] \[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+if [ -n "$OMARCHY" ]; then
+    # Starship prompt, eza/zoxide aliases, mise, fzf, readline tweaks
+    source "$OMARCHY_PATH/default/bash/rc"
 else
-    PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+    # History
+    HISTSIZE=10000
+    HISTFILESIZE=20000
+    HISTCONTROL=ignoredups:erasedups
+    shopt -s histappend
+
+    # Check window size after each command
+    shopt -s checkwinsize
+
+    # Prompt - cyan container ID when Docker, yellow hostname when SSH'd
+    if [ -f /.dockerenv ]; then
+        _container_id=$(hostname)
+        PS1='\[\033[38;5;81m\]'"$_container_id"'\[\033[0m\] \[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+    elif [ -n "$SSH_CONNECTION" ]; then
+        PS1='\[\033[38;5;226m\](\h)\[\033[0m\] \[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+    else
+        PS1='\[\033[38;5;167m\]ϟ\[\033[0m\] \[\033[1;38;5;240m\]\w\[\033[0m\] '
+    fi
+
+    # Notify terminal of working directory (for tmux pane_current_path)
+    PROMPT_COMMAND='printf "\033]7;file://%s%s\033\\\\" "$HOSTNAME" "$PWD"'
+
+    alias ls='ls --color=auto'
+
+    # Terminal
+    export TERM=xterm-256color
+
+    # Bash completion
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    fi
+
+    # fzf
+    export PATH="$HOME/.fzf/bin:$PATH"
+    command -v fzf &>/dev/null && eval "$(fzf --bash)"
 fi
 
-# Notify terminal of working directory (for tmux pane_current_path)
-PROMPT_COMMAND='printf "\033]7;file://%s%s\033\\\\" "$HOSTNAME" "$PWD"'
-
-# Colors
-alias ls='ls --color=auto'
+# Aliases
 alias la='ls -la'
 alias ll='ls -lah'
 alias grep='grep --color=auto'
@@ -49,15 +73,3 @@ elif command -v vim &>/dev/null; then
 else
     export EDITOR="vi"
 fi
-
-# Terminal
-export TERM=xterm-256color
-
-# Bash completion
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-fi
-
-# fzf
-export PATH="$HOME/.fzf/bin:$PATH"
-command -v fzf &>/dev/null && eval "$(fzf --bash)"
