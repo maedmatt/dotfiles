@@ -1,6 +1,7 @@
 modelRoles:
-  default: openai-codex/gpt-6-astra:xhigh
+  default: anthropic/claude-opus-5-5:xhigh
   advisor: anthropic/claude-fable-5:xhigh
+  web: web/exa
 theme:
   dark: dark-gruvbox
   light: anthracite
@@ -9,3 +10,4 @@ colorBlindMode: true
 setupVersion: 2
 composer:
   shape: field
+hideThinkingBlock: false
