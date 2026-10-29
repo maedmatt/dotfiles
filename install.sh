@@ -14,10 +14,8 @@ else
 fi
 
 # Parse flags
-DO_APPS=false
 DO_CLAUDE=false
 DO_CODEX=false
-DO_OPENCODE=false
 DO_PI=false
 DO_OMP=false
 DO_DOTFILES=false
@@ -28,13 +26,11 @@ fi
 
 for arg in "$@"; do
     case $arg in
-        --apps)     DO_APPS=true ;;
         --claude)   DO_CLAUDE=true ;;
         --codex)    DO_CODEX=true ;;
-        --opencode) DO_OPENCODE=true ;;
         --pi)       DO_PI=true ;;
         --omp)      DO_OMP=true ;;
-        --all)      DO_APPS=true; DO_CLAUDE=true; DO_CODEX=true; DO_OPENCODE=true; DO_PI=true; DO_OMP=true; DO_DOTFILES=true ;;
+        --all)      DO_CLAUDE=true; DO_CODEX=true; DO_PI=true; DO_OMP=true; DO_DOTFILES=true ;;
     esac
 done
 
@@ -65,190 +61,6 @@ link_skills() {
     done
 }
 
-install_apps() {
-    echo "Installing apps..."
-    if [[ "$PLATFORM" == "macos" ]]; then
-        if ! command -v brew &> /dev/null; then
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        # tree-sitter-cli: nvim-treesitter main branch builds parsers with it
-        brew install neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript mermaid-cli bun
-    elif command -v pacman &> /dev/null; then
-        # Arch / Omarchy: everything is in the official repos; mermaid-cli via npm
-        sudo pacman -S --needed neovim uv yazi tmux lazygit btop fzf fd ripgrep tree-sitter-cli imagemagick ghostscript bun bat jq
-        command -v mmdc &> /dev/null || npm install -g @mermaid-js/mermaid-cli
-    else
-        # Detect architecture
-        ARCH=$(uname -m)  # x86_64 or aarch64
-
-        if [ "$ARCH" = "x86_64" ]; then
-            DEB_ARCH="amd64"
-            NVIM_ARCH="x86_64"
-            LG_ARCH="x86_64"
-            TS_ARCH="x64"
-            YAZI_ARCH="x86_64"
-        elif [ "$ARCH" = "aarch64" ]; then
-            DEB_ARCH="arm64"
-            NVIM_ARCH="arm64"
-            LG_ARCH="arm64"
-            TS_ARCH="arm64"
-            YAZI_ARCH="aarch64"
-        else
-            echo "Unsupported architecture: $ARCH"
-            exit 1
-        fi
-
-        gh_latest() {
-            local tag
-            tag=$(curl -fsSL "https://api.github.com/repos/$1/releases/latest" \
-                | grep -Po '"tag_name":\s*"\K[^"]+' \
-                | head -n 1)
-
-            [ -n "$tag" ] || {
-                echo "Could not fetch latest release for $1"
-                exit 1
-            }
-
-            echo "$tag"
-        }
-
-        download() {
-            local out="$1"
-            local url="$2"
-
-            curl -fLo "$out" "$url"
-        }
-
-        # Base dependencies
-        sudo apt update
-        sudo apt install -y \
-            bash-completion \
-            bat \
-            btop \
-            build-essential \
-            ca-certificates \
-            curl \
-            git \
-            gzip \
-            jq \
-            ripgrep \
-            tar \
-            tmux \
-            unzip \
-            xz-utils
-
-        # Ubuntu installs bat as batcat.
-        if ! command -v bat &> /dev/null && command -v batcat &> /dev/null; then
-            mkdir -p "$HOME/.local/bin"
-            ln -sfn "$(command -v batcat)" "$HOME/.local/bin/bat"
-        fi
-
-        # Remove conflicting Ubuntu fd package
-        sudo apt remove -y fd-find 2>/dev/null || true
-
-        # fd
-        if ! command -v fd &> /dev/null; then
-            V=$(gh_latest sharkdp/fd)
-            download /tmp/fd.deb \
-                "https://github.com/sharkdp/fd/releases/download/${V}/fd-musl_${V#v}_${DEB_ARCH}.deb"
-
-            sudo apt install -y /tmp/fd.deb
-            rm -f /tmp/fd.deb
-        fi
-
-        # neovim
-        if ! command -v nvim &> /dev/null; then
-            download /tmp/nvim.tar.gz \
-                "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
-
-            sudo rm -rf "/opt/nvim-linux-${NVIM_ARCH}"
-            sudo tar -C /opt -xzf /tmp/nvim.tar.gz
-            sudo ln -sf "/opt/nvim-linux-${NVIM_ARCH}/bin/nvim" /usr/local/bin/nvim
-
-            rm -f /tmp/nvim.tar.gz
-        fi
-
-        # tree-sitter CLI, required by nvim-treesitter's main branch
-        tree_sitter_works() {
-            local version
-
-            command -v tree-sitter &> /dev/null || return 1
-            version=$(tree-sitter --version 2>/dev/null | awk 'NR == 1 { print $2 }') || return 1
-            [ -n "$version" ] && dpkg --compare-versions "$version" ge 0.26.1
-        }
-
-        if ! tree_sitter_works; then
-            V=$(gh_latest tree-sitter/tree-sitter)
-            download /tmp/tree-sitter.gz \
-                "https://github.com/tree-sitter/tree-sitter/releases/download/${V}/tree-sitter-linux-${TS_ARCH}.gz"
-            gzip -dc /tmp/tree-sitter.gz > /tmp/tree-sitter
-            chmod 0755 /tmp/tree-sitter
-
-            if /tmp/tree-sitter --version &> /dev/null; then
-                sudo install -m 0755 /tmp/tree-sitter /usr/local/bin/tree-sitter
-            else
-                # Current release binaries require glibc 2.39. Build locally on
-                # older systems such as Ubuntu 22.04 instead of replacing glibc.
-                echo "Prebuilt tree-sitter is incompatible; building ${V} locally..."
-                sudo apt install -y clang libclang-dev libssl-dev pkg-config
-
-                if [ ! -x "$HOME/.cargo/bin/rustup" ]; then
-                    download /tmp/rustup-init.sh https://sh.rustup.rs
-                    sh /tmp/rustup-init.sh -y --profile minimal --no-modify-path
-                    rm -f /tmp/rustup-init.sh
-                fi
-
-                "$HOME/.cargo/bin/rustup" toolchain install stable --profile minimal
-                "$HOME/.cargo/bin/cargo" +stable install tree-sitter-cli \
-                    --version "${V#v}" --locked
-                sudo install -m 0755 "$HOME/.cargo/bin/tree-sitter" \
-                    /usr/local/bin/tree-sitter
-            fi
-
-            rm -f /tmp/tree-sitter.gz /tmp/tree-sitter
-        fi
-
-        # lazygit
-        if ! command -v lazygit &> /dev/null; then
-            V=$(gh_latest jesseduffield/lazygit)
-            TMP=$(mktemp -d)
-
-            download "$TMP/lazygit.tar.gz" \
-                "https://github.com/jesseduffield/lazygit/releases/download/${V}/lazygit_${V#v}_linux_${LG_ARCH}.tar.gz"
-
-            tar -xzf "$TMP/lazygit.tar.gz" -C "$TMP" lazygit
-            sudo install -m 0755 "$TMP/lazygit" /usr/local/bin/lazygit
-
-            rm -rf "$TMP"
-        fi
-
-        # yazi
-        if ! command -v yazi &> /dev/null; then
-            V=$(gh_latest sxyazi/yazi)
-            download /tmp/yazi.deb \
-                "https://github.com/sxyazi/yazi/releases/download/${V}/yazi-${YAZI_ARCH}-unknown-linux-musl.deb"
-            sudo apt install -y /tmp/yazi.deb
-            rm -f /tmp/yazi.deb
-        fi
-
-        # fzf
-        if [ ! -d "$HOME/.fzf" ]; then
-            git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-        else
-            git -C "$HOME/.fzf" pull --ff-only
-        fi
-
-        "$HOME/.fzf/install" \
-            --key-bindings \
-            --completion \
-            --no-update-rc \
-            --no-bash \
-            --no-zsh \
-            --no-fish
-
-    fi
-}
-
 install_claude() {
     echo "Installing Claude Code config..."
     link "$DOTFILES/shared/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
@@ -257,14 +69,6 @@ install_claude() {
     link_skills "$HOME/.claude/skills"
     link "$DOTFILES/shared/claude/settings.json" "$HOME/.claude/settings.json"
     link "$DOTFILES/shared/ccstatusline" "$HOME/.config/ccstatusline"
-}
-
-install_opencode() {
-    echo "Installing OpenCode config..."
-    link "$DOTFILES/shared/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
-    link "$DOTFILES/shared/opencode/tui.json" "$HOME/.config/opencode/tui.json"
-    link "$DOTFILES/shared/opencode/command" "$HOME/.config/opencode/command"
-    link "$DOTFILES/shared/opencode/themes" "$HOME/.config/opencode/themes"
 }
 
 install_codex() {
@@ -326,15 +130,12 @@ install_dotfiles() {
     fi
 }
 
-if $DO_APPS; then install_apps; fi
 if $DO_CLAUDE; then install_claude; fi
 if $DO_CODEX; then install_codex; fi
-if $DO_OPENCODE; then install_opencode; fi
 if $DO_PI; then install_pi; fi
 if $DO_OMP; then install_omp; fi
-# Codex, OpenCode, Pi, and Oh My Pi all read ~/.agents/skills (the shell rc
-# stops OpenCode from also reading ~/.claude/skills)
-if $DO_CODEX || $DO_OPENCODE || $DO_PI || $DO_OMP; then link_skills "$HOME/.agents/skills"; fi
+# Codex, Pi, and Oh My Pi all read ~/.agents/skills
+if $DO_CODEX || $DO_PI || $DO_OMP; then link_skills "$HOME/.agents/skills"; fi
 if $DO_DOTFILES; then install_dotfiles; fi
 
 echo "Done!"

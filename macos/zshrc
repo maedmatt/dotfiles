@@ -57,6 +57,3 @@ function y() {
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-# OpenCode: load shared skills from ~/.agents/skills, not Claude Code's folder
-export OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1
