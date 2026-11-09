@@ -1,0 +1,148 @@
+{
+  "project": "example-shop",
+  "lead": "search-lead",
+  "parent_lead": null,
+  "written_at": "Mon 2 Mar 2026, 09:15",
+  "headline": "Search is four times faster in staging; releasing it to production waits on you.",
+  "handoff": {
+    "time": "Sun 1 Mar, 18:00",
+    "quote": "search is way too slow, find out why and fix it overnight",
+    "goal": "Make product search answer in under 200 ms for 95% of requests."
+  },
+  "previous_catchup": null,
+  "needs_you": [
+    {
+      "title": "Release the new search index to production?",
+      "what": "The new index covers product name and category together, which is what most searches filter on. On the **replay set** it brings 95% of searches from 820 ms down to 190 ms.",
+      "pick": "Release it tonight, outside shop hours",
+      "why": "Building the index locks writes to the products table for about 4 minutes, so nobody can edit products while it runs.",
+      "options": [
+        {
+          "name": "Tonight",
+          "gain": "Fast search from tomorrow morning",
+          "cost": "4 minutes without product edits at night"
+        },
+        {
+          "name": "Now",
+          "gain": "Fast search an hour from now",
+          "cost": "4 minutes without product edits during shop hours"
+        },
+        {
+          "name": "Leave it as it is",
+          "gain": "No risk to production",
+          "cost": "Search stays at about 800 ms"
+        }
+      ],
+      "urgent": false
+    }
+  ],
+  "done_in_your_name": [
+    {
+      "what": "Deleted 12 old staging database snapshots (40 GB).",
+      "why": "Your note \"clean up whatever is in the way\", and staging had run out of disk.",
+      "undo": "",
+      "reversible": false
+    },
+    {
+      "what": "Merged the cache fix into the main branch.",
+      "why": "Your standing rule: review, then merge.",
+      "undo": "Revert the merge commit.",
+      "reversible": true
+    }
+  ],
+  "your_messages": [
+    {
+      "time": "Sun 21:30",
+      "said": "don't touch the checkout code",
+      "outcome": "Kept out of scope; no worker edited it."
+    }
+  ],
+  "workstreams": [
+    {
+      "goal": "Find out why search is slow",
+      "status": "done",
+      "result": "Search read the whole products table on every request, because no index matched the filters it uses. That one cause explains **about 90%** of the time spent.",
+      "steps": [
+        {
+          "time": "Sun 18:30",
+          "did": "Recorded the **replay set**: 1,000 real search requests in staging.",
+          "found": "95% of them took up to 820 ms.",
+          "why_next": "Look at where that time goes."
+        },
+        {
+          "time": "Sun 19:40",
+          "did": "Asked the database to explain its plan for the slowest searches.",
+          "found": "Each one read all 2 million product rows.",
+          "why_next": "Add an index for the filters searches use."
+        }
+      ],
+      "evidence": [
+        "Staging, with a copy of last week's production data.",
+        "The replay set, replayed three times."
+      ],
+      "distance": "Done.",
+      "next": "nothing"
+    },
+    {
+      "goal": "Make search answer in under 200 ms",
+      "status": "waiting",
+      "result": "With the new index, 95% of searches answer within **190 ms** in staging, down from 820 ms.",
+      "media": [
+        {
+          "path": "/absolute/path/to/latency-before-after.png",
+          "caption": "Search time per request, before and after the index."
+        }
+      ],
+      "evidence": [
+        "Staging only; production has more traffic, so expect slightly slower numbers there."
+      ],
+      "distance": "One step: releasing the index to production.",
+      "next": "nothing until you decide"
+    }
+  ],
+  "workers": [
+    {
+      "name": "query-audit",
+      "task": "Find where search spends its time",
+      "state": "done",
+      "last_result": "Found the missing index.",
+      "where": "tab query-audit"
+    },
+    {
+      "name": "index-test",
+      "task": "Build and test the new index in staging",
+      "state": "idle",
+      "last_result": "190 ms for 95% of searches.",
+      "where": "tab index-test"
+    }
+  ],
+  "changed_beliefs": [
+    {
+      "before": "The search cache was the bottleneck.",
+      "now": "The cache was fine; the database read every row.",
+      "affects": "The planned cache rewrite is no longer needed."
+    }
+  ],
+  "resources": [
+    {
+      "level": "ok",
+      "what": "Staging disk",
+      "state": "40 GB free after the cleanup."
+    },
+    {
+      "level": "warn",
+      "what": "Subscription quota",
+      "state": "Weekly window 60% used, resets in 3 days."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "replay set",
+      "meaning": "The 1,000 real search requests recorded in staging on Sunday; every speed number on this page comes from replaying them."
+    },
+    {
+      "term": "index-test",
+      "meaning": "The worker that built the new index in staging and measured it on the replay set."
+    }
+  ]
+}
