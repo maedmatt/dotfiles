@@ -7,9 +7,23 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Editor behavior
 vim.opt.mouse = "a"
--- Use OSC 52 for remote sessions; prefer the native provider locally.
-if vim.env.SSH_CONNECTION then
-  vim.g.clipboard = "osc52"
+-- Over SSH and inside Herdr, copy through the terminal (OSC 52), so a yank
+-- reaches the clipboard of the computer whose terminal shows the session.
+-- Herdr panes keep the environment of the Herdr server, so SSH_CONNECTION is
+-- missing when the server was started on the desktop. Herdr forwards only the
+-- standard clipboard and does not answer clipboard reads, so both registers
+-- copy to it and paste returns the last yank; paste from the system clipboard
+-- with the terminal's paste key. Locally outside Herdr, the native provider.
+if vim.env.SSH_CONNECTION or vim.env.HERDR_ENV then
+  local copy = require("vim.ui.clipboard.osc52").copy("+")
+  local function paste()
+    return { vim.split(vim.fn.getreg('"'), "\n"), vim.fn.getregtype('"') }
+  end
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = { ["+"] = copy, ["*"] = copy },
+    paste = { ["+"] = paste, ["*"] = paste },
+  }
 end
 vim.opt.clipboard = "unnamedplus"
 vim.opt.undofile = true
