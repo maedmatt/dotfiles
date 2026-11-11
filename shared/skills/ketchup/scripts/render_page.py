@@ -157,6 +157,9 @@ def render(c):
         opts = n.get("options") or []
         if len(opts) < 2:
             warn(f"{w}: give at least two options, including leaving it as it is")
+        for j, o in enumerate(opts, 1):
+            if len(str(o.get("name", ""))) > 60:
+                warn(f"{w} option {j}: keep the name to a few words and put the detail in gain and cost")
         rows = "".join(
             f"<tr><th>{inline(o.get('name'))}</th><td>{inline(o.get('gain'))}</td><td>{inline(o.get('cost'))}</td></tr>"
             for o in opts
@@ -214,7 +217,7 @@ def render(c):
     rows = "".join(
         f"<tr><td><code>{html.escape(str(x.get('name', '')))}</code></td><td>{inline(x.get('task'))}</td>"
         f"<td>{badge(x.get('state'), 'worker ' + str(x.get('name')))}</td><td>{inline(x.get('last_result'))}</td>"
-        f"<td class='nowrap'>{inline(x.get('where'))}</td></tr>"
+        f"<td>{inline(x.get('where'))}</td></tr>"
         for x in workers
     )
     workers_html = f'<table><thead><tr><th>Worker</th><th>Task</th><th>State</th><th>Last result</th><th>Where</th></tr></thead><tbody>{rows}</tbody></table>' if rows else ""
@@ -286,8 +289,8 @@ nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .attn-edge{border-left:5px solid var(--attn)}.pick{background:var(--attn-bg);border-radius:6px;padding:6px 10px}
 .none{color:var(--ok);font-weight:600}
 table{width:100%;border-collapse:collapse;margin:.5em 0;background:var(--card);border:1px solid var(--line);border-radius:8px;font-size:.94rem}
-th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}thead th{font-size:.82rem;color:var(--muted);font-weight:600}
-table.opts tbody th{white-space:nowrap}.nowrap{white-space:nowrap}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);overflow-wrap:break-word}thead th{font-size:.82rem;color:var(--muted);font-weight:600}
+table.opts{table-layout:fixed}table.opts thead th:first-child{width:32%}.nowrap{white-space:nowrap}
 .badge{display:inline-block;font-size:.78rem;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap;vertical-align:middle}
 .badge.attn{background:var(--attn-bg);color:var(--attn)}.badge.bad{background:var(--bad-bg);color:var(--bad)}
 .badge.ok{background:var(--ok-bg);color:var(--ok)}.badge.info{background:var(--info-bg);color:var(--info)}.badge.muted{background:var(--muted-bg);color:var(--muted)}
