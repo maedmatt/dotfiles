@@ -1,13 +1,15 @@
 modelRoles:
-  default: anthropic/claude-opus-5-5:xhigh
   advisor: anthropic/claude-fable-5:xhigh
   web: web/exa
+  default: anthropic/claude-fable-5-2:xhigh
 theme:
   dark: dark-gruvbox
   light: anthracite
 symbolPreset: unicode
 colorBlindMode: true
-setupVersion: 2
+setupVersion: 3
 composer:
   shape: field
 hideThinkingBlock: false
+update:
+  auto: false
