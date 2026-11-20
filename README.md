@@ -90,15 +90,32 @@ run.
 On Omarchy the installer does not link the repo's Ghostty and btop configs,
 because Omarchy's own versions follow the active Omarchy theme.
 
+Hyprland key bindings that every Omarchy machine shares live in
+`linux/hypr/bindings.lua`: Vim-style window focus and swapping
+(Super+H/J/K/L, with Shift to swap) and moving windows between columns in the
+scrolling layout (Super+[ and Super+]). The installer links that file as
+`~/.config/hypr/shared-bindings.lua`. Each machine keeps its own
+`~/.config/hypr/bindings.lua` for bindings only it needs, such as a dictation
+key on a machine with a microphone, and loads the shared file from there.
+
 To set up a new Omarchy machine:
 
 1. Install Ghostty and make it the default terminal (Omarchy's default is foot):
    `omarchy install terminal ghostty`
 2. Clone this repo and run `./install.sh --all`.
-3. Install the Herdr integrations (see [Herdr](#herdr)).
-4. Add `desktop-notifications = false` to `~/.config/ghostty/config`. This turns
-   off desktop notifications from terminal apps.
-5. Start each agent once and log in.
+3. Add these lines at the top of `~/.config/hypr/bindings.lua`, then run
+   `hyprctl reload`:
+   ```lua
+   -- Key bindings shared by all Omarchy machines (dotfiles linux/hypr/bindings.lua).
+   -- The machine-specific bindings below override them.
+   require("hypr.shared-bindings")
+   ```
+4. Install the Herdr integrations (see [Herdr](#herdr)).
+5. Turn off desktop notifications from terminal apps: add
+   `desktop-notifications = false` to `~/.config/ghostty/config`, and add a
+   `[desktop-notifications]` section with `command=true` to
+   `~/.config/foot/foot.ini`.
+6. Start each agent once and log in.
 
 ## Herdr
 
@@ -156,7 +173,7 @@ shared/
 ├── omp/            # oh my pi settings (shared rules and skills linked at install)
 └── skills/         # shared skills for all AI agents
 macos/              # zshrc, ghostty, Karabiner-Elements
-linux/              # bashrc, ghostty
+linux/              # bashrc, ghostty, hypr (Omarchy key bindings)
 ```
 
 ## Agent rules

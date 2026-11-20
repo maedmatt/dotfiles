@@ -125,6 +125,11 @@ install_dotfiles() {
     # Omarchy owns ghostty (dynamic theme, font)
     [ -d /usr/share/omarchy ] || link "$DOTFILES/$PLATFORM/ghostty" "$HOME/.config/ghostty"
     link "$DOTFILES/$PLATFORM/$SHELL_RC" "$SHELL_TARGET"
+    # Omarchy: key bindings shared by all Omarchy machines; each machine's
+    # ~/.config/hypr/bindings.lua loads them (see README)
+    if [ -d /usr/share/omarchy ]; then
+        link "$DOTFILES/linux/hypr/bindings.lua" "$HOME/.config/hypr/shared-bindings.lua"
+    fi
     if [[ "$PLATFORM" == "macos" ]]; then
         link "$DOTFILES/macos/karabiner/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
     fi
