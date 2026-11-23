@@ -14,7 +14,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "fable",
   "hooks": {
     "SessionStart": [
       {
@@ -53,13 +53,13 @@
     }
   },
   "awaySummaryEnabled": false,
-  "idleCompaction": false,
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
   "theme": "auto",
   "verbose": true,
   "preferredNotifChannel": "ghostty",
+  "idleCompaction": false,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": false,
   "skipAutoPermissionPrompt": true

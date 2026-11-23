@@ -11,9 +11,9 @@
     "test": "npm run test --workspace=pi-save-md-extension && npm run test --workspace=pi-web-tools-extension && npm run test --workspace=pi-skill-toggle"
   },
   "devDependencies": {
-    "@earendil-works/pi-ai": "^0.84.1",
-    "@earendil-works/pi-coding-agent": "^0.84.1",
-    "@earendil-works/pi-tui": "^0.84.1",
+    "@earendil-works/pi-ai": "^1.6.0",
+    "@earendil-works/pi-coding-agent": "^1.6.0",
+    "@earendil-works/pi-tui": "^1.6.0",
     "@types/node": "^24.5.2",
     "typebox": "^1.3.11",
     "typescript": "^5.9.2"

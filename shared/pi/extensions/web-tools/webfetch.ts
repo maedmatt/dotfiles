@@ -1,5 +1,4 @@
 import { formatSize } from "@earendil-works/pi-coding-agent";
-import { StringEnum } from "@earendil-works/pi-ai";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 import { FetchPage, type FetchPageError } from "./fetch-page.ts";
@@ -52,7 +51,11 @@ export function createWebFetchTool(composition?: WebFetchToolComposition) {
 		parameters: Type.Object({
 			url: Type.String({ description: "The http:// or https:// URL to fetch." }),
 			format: Type.Optional(
-				StringEnum([...WEB_FETCH_FORMATS], {
+				// Plain {type:"string", enum} schema like pi-ai's StringEnum, kept as a TypeBox type:
+				// the published pi-ai StringEnum returns a pi-schema Schema that TypeBox cannot infer.
+				Type.Unsafe<(typeof WEB_FETCH_FORMATS)[number]>({
+					type: "string",
+					enum: [...WEB_FETCH_FORMATS],
 					description: "Return format. Defaults to the web-tools fetch default format setting.",
 				}),
 			),

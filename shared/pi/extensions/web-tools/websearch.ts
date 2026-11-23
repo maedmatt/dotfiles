@@ -1,4 +1,3 @@
-import { StringEnum } from "@earendil-works/pi-ai";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 import { createOperationSignal, isOperationTimeoutError } from "./network.ts";
@@ -52,7 +51,11 @@ export function createWebSearchTool(composition?: WebSearchToolComposition) {
 				}),
 			),
 			depth: Type.Optional(
-				StringEnum([...SEARCH_DEPTHS], {
+				// Plain {type:"string", enum} schema like pi-ai's StringEnum, kept as a TypeBox type:
+				// the published pi-ai StringEnum returns a pi-schema Schema that TypeBox cannot infer.
+				Type.Unsafe<(typeof SEARCH_DEPTHS)[number]>({
+					type: "string",
+					enum: [...SEARCH_DEPTHS],
 					description:
 						"Search depth: 'auto' (default) or 'fast'. 'deep' is accepted and mapped to 'fast'.",
 				}),
